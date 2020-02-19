@@ -19,9 +19,12 @@ class UserRepository {
       var mess = convert.jsonDecode(s.body);
       if (mess['status'] == 'failed'){
         rt = mess['status'];
+        print(mess);
       } else {
-        rt = "bearer ${mess['data']['jwt']['token']}";
-        await storage.write(key: 'bearer', value: mess['data']['jwt']['token']);
+        print(mess);
+        print(rt);
+        rt = "bearer ${mess['auth']['jwt']['token']}";
+        await storage.write(key: 'bearer', value: mess['auth']['jwt']['token']);
       }
 
     });
