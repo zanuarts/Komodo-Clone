@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../home/drawer.dart';
+import 'package:flutter_ui1/home/drawer.dart';
 
 void main(){
   runApp(
@@ -48,7 +48,8 @@ class _MyappState extends State {
   @override
   Widget build(BuildContext context){
 
-    Color color = Theme.of(context).primaryColor;
+    //Color color = Theme.of(context).primaryColor;
+    color : Colors.deepOrangeAccent;
 
     Widget submitSection = Container(
       
@@ -65,7 +66,7 @@ class _MyappState extends State {
 
 
         ),
-        color: Colors.blue,
+        color: Colors.deepOrangeAccent,
         onPressed: (){
           _tampilkanalert();
         },
@@ -92,6 +93,7 @@ class _MyappState extends State {
       appBar: AppBar(
         title: new Text("Absensi"),
         centerTitle: true,
+        backgroundColor: Colors.deepOrangeAccent,
       ),
       drawer: DrawerApp(),
       body: ListView(

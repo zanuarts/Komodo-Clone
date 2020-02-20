@@ -1,8 +1,17 @@
+import 'dart:io';
+import 'package:flutter_ui1/components/globalkey.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_ui1/login/bloc/login_bloc.dart';
 import 'package:flutter_ui1/components/inputfield.dart';
-
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:http/io_client.dart';
+import 'package:uuid/uuid.dart';
+import 'dart:async';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert' as convert;
+import 'package:flutter_ui1/home/home.dart';
 
 
 class LoginForm extends StatefulWidget {
@@ -11,9 +20,37 @@ class LoginForm extends StatefulWidget {
 }
 
 class _LoginFormState extends State<LoginForm> {
+  final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
   bool showPassword = true;
+  var uuid = new Uuid();
+  bool isLoading = false;
+
+  // Future<List> _validator() async {
+  //     if (_usernameController.text == '') {
+  //       Fluttertoast.showToast(
+  //           msg: "Username Tidak Boleh Kosong",
+  //           toastLength: Toast.LENGTH_SHORT,
+  //           gravity: ToastGravity.CENTER,
+  //           timeInSecForIos: 1,
+  //           backgroundColor: Colors.red,
+  //           textColor: Colors.white,
+  //           fontSize: 16.0);
+  //       return null;
+  //     }
+  //     if (_passwordController.text == '') {
+  //       Fluttertoast.showToast(
+  //           msg: "Password  Tidak Boleh Kosong",
+  //           toastLength: Toast.LENGTH_SHORT,
+  //           gravity: ToastGravity.CENTER,
+  //           timeInSecForIos: 1,
+  //           backgroundColor: Colors.red,
+  //           textColor: Colors.white,
+  //           fontSize: 16.0);
+  //       return null;
+  //     }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -126,24 +163,31 @@ class _LoginFormState extends State<LoginForm> {
                                       shadowColor: Colors.deepOrangeAccent,
                                       borderRadius: BorderRadius.circular(30.0),
                                       child: ButtonTheme(
-                                          shape: new RoundedRectangleBorder(
-                                              borderRadius:
-                                              new BorderRadius.circular(30.0)),
-                                          minWidth: MediaQuery.of(context).size.width / 2,
-                                          height: 50,
-                                          child: FlatButton(
-                                              padding: EdgeInsets.all(5),
-                                              color: Colors.deepOrangeAccent,
-                                              textColor: Colors.blue,
-                                              //  shape: new RoundedRectangleBorder(side: BorderSide(color: Colors.blue)),
-                                              child: new Text('Login',
-                                                  style: const TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 16.0,
-                                                    fontWeight: FontWeight.bold,
-                                                  )),
-                                              onPressed: state is! LoginLoading ? _onLoginButtonPressed : null,
-                                              )),
+                                        shape: new RoundedRectangleBorder(
+                                          borderRadius:
+                                          new BorderRadius.circular(30.0)
+                                        ),
+                                        minWidth: MediaQuery.of(context).size.width / 2,
+                                        height: 50,
+                                        child: FlatButton(
+                                          padding: EdgeInsets.all(5),
+                                          color: Colors.deepOrangeAccent,
+                                          textColor: Colors.blue,
+                                          //  shape: new RoundedRectangleBorder(side: BorderSide(color: Colors.blue)),
+                                          child: new Text('Login',
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 16.0,
+                                              fontWeight: FontWeight.bold,
+                                            )
+                                          ),
+                                          // onPressed: () async{
+                                          //   _validator();
+                                          // }
+                                          onPressed: state is! LoginLoading ? _onLoginButtonPressed : null,
+                                          // onPressed: state is! LoginLoading ? _onLoginButtonPressed : null,
+                                        )
+                                      ),
                                     ),
                                   )
                                 ],
@@ -152,103 +196,12 @@ class _LoginFormState extends State<LoginForm> {
                           ),
                         ),
                       )
+                      
                     ],
                   )
                 ),
               ),
-//              Container(
-//              margin: EdgeInsets.all(5.0),
-//              child: Column(
-//                mainAxisAlignment: MainAxisAlignment.center,
-//                children: <Widget>[
-//                  Container(
-//                    margin: EdgeInsets.only(top: 10.0, bottom: 10.0),
-//                    child:Text(
-//                      'Instagram',
-//                    ),
-//                  ),
-//                  Container(
-//                    margin: EdgeInsets.all(5.0),
-//                    child: TextFormField(
-//                      autofocus: false,
-//                      decoration: InputDecoration(
-//                        border: OutlineInputBorder(
-//                          borderRadius: BorderRadius.all(Radius.circular(10.0)),
-//                        ),
-//                        labelText: 'username',
-//                        suffixIcon: Icon(
-//                          Icons.account_circle,
-//                          color : Colors.blue,
-//                        ),
-//                      ),
-//                      controller: _usernameController,
-//                    ),
-//                  ),
-//                  Container(
-//                    margin: EdgeInsets.all(5.0),
-//                    child: TextFormField(
-//                      obscureText: true,
-//                      decoration: InputDecoration(
-//                        border: OutlineInputBorder(
-//                          borderRadius: BorderRadius.all(Radius.circular(10.0)),
-//                        ),
-//                        labelText: 'password',
-//                        //suffixIcon: GestureDetector(
-//
-//                        //isDense: true,
-//                      ),
-//                      controller: _passwordController,
-//                      //obscureText: true,
-//                    ),
-//                  ),
-//                  Container(
-//                    alignment : Alignment(1.0,0.0),
-//
-//                      child: Text(
-//                          'forgot password?'
-//                      ),
-//
-//                  ),
-//                  Container(
-//                    padding: EdgeInsets.all(5.0),
-//                    child: RaisedButton(
-//                      shape: RoundedRectangleBorder(
-//                        borderRadius: new BorderRadius.circular(10.0),
-//                      ),
-//                      color: Colors.blue,
-//                      child: Text(
-//                        'Log In', style: TextStyle(
-//                        color: Colors.white,
-//                      ),
-//                      ),
-//                      onPressed: state is! LoginLoading ? _onLoginButtonPressed : null,
-//                    ),
-//                  ),
-//                  Container(
-//                    padding: EdgeInsets.only(top:10.0),
-//                    child: Row(
-//                      mainAxisAlignment: MainAxisAlignment.center,
-//                      children: <Widget>[
-//                        Text(
-//                          "don't have an account?",
-//                        ),
-//
-//                          Text(
-//                            'Register here',
-//                          ),
-//
-//                      ],
-//                    ),
-//                  ),
-//                  Container(
-//                    child: state is LoginLoading
-//                        ? CircularProgressIndicator()
-//                        : null,
-//                  ),
-//                ],
-//              ),
-//            ),
-
+            
           ]
           );
         },
@@ -256,3 +209,6 @@ class _LoginFormState extends State<LoginForm> {
     );
   }
 }
+
+
+

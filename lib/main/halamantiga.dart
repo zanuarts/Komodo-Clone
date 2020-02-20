@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import '../home/drawer.dart';
+//import 'package:flutter_ui1/components/drawer.dart';
+
 
 void main(){
   runApp(
@@ -31,6 +33,7 @@ class Halamantiga extends StatelessWidget {
       appBar: AppBar(
         title: new Text("Project"),
         centerTitle: true,
+        backgroundColor: Colors.deepOrangeAccent,
       ),
       drawer: DrawerApp(),
       body: new Container(

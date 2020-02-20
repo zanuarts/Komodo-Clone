@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import '../home/drawer.dart';
+//import 'package:flutter_ui1/components/drawer.dart';
+
 
 void main(){
   runApp(
@@ -23,7 +25,7 @@ class Halamansatu extends StatelessWidget {
           ),),
 
           centerTitle: true,
-          backgroundColor: Colors.blueAccent,
+          backgroundColor: Colors.deepOrangeAccent,
         ),
         drawer: DrawerApp(),
         body: Container(

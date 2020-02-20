@@ -9,7 +9,35 @@ abstract class LoginState extends Equatable {
 
 class LoginInitial extends LoginState {}
 
-class LoginLoading extends LoginState {}
+class LoginLoading extends LoginState {
+  final _usernameController = TextEditingController();
+  final _passwordController = TextEditingController();
+
+  Future<List> _validator() async {
+      if (_usernameController.text == '') {
+        Fluttertoast.showToast(
+            msg: "Username Tidak Boleh Kosong",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.CENTER,
+            timeInSecForIos: 1,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+            fontSize: 16.0);
+        return null;
+      }
+      if (_passwordController.text == '') {
+        Fluttertoast.showToast(
+            msg: "Password  Tidak Boleh Kosong",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.CENTER,
+            timeInSecForIos: 1,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+            fontSize: 16.0);
+        return null;
+      }
+  }
+}
 
 class LoginFailure extends LoginState {
   final String error;

@@ -39,7 +39,7 @@ class LoginPage extends StatelessWidget {
         new Scaffold(
           body: BlocProvider(
             create: (context) {
-             return LoginBloc(
+            return LoginBloc(
               authenticationBloc: BlocProvider.of<AuthenticationBloc>(context),
               userRepository: userRepository,
               );
@@ -55,9 +55,9 @@ class LoginPage extends StatelessWidget {
             'assets/bg-bawah.png',
             ),
           fit: BoxFit.fill,
-         ),
+        ),
         )
-       ],
+      ],
       ),
     );
   }

@@ -50,7 +50,7 @@ class _HalamannavState extends State {
         ],
         type: BottomNavigationBarType.fixed,
         currentIndex: _selectedIndex,
-        fixedColor: Colors.blueAccent,
+        fixedColor: Colors.deepOrangeAccent,
 
 
         onTap: onItemTapped,
