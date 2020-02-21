@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_ui1/blocs/blocs.dart';
-import 'package:flutter_ui1/repository/repository.dart';
-import 'package:flutter_ui1/home/home_page.dart';
+import 'package:komodo_ui/blocs/blocs.dart';
+import 'package:komodo_ui/repository/repository.dart';
+import 'package:komodo_ui/home/home_page.dart';
 
 class HomePage extends StatelessWidget {
   final ApiRepository apiRepository;

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_ui1/login/bloc/login_bloc.dart';
-import 'package:flutter_ui1/components/inputfield.dart';
+import 'package:komodo_ui/login/bloc/login_bloc.dart';
+import 'package:komodo_ui/components/inputfield.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:uuid/uuid.dart';
 

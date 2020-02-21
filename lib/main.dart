@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:bloc/bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_ui1/login/login_page.dart';
-import 'package:flutter_ui1/repository/api_repository.dart';
-import 'package:flutter_ui1/repository/repository.dart';
-import 'package:flutter_ui1/authentication/authentication.dart';
-import 'package:flutter_ui1/splash/splash.dart';
-import 'package:flutter_ui1/home/home.dart';
-import 'package:flutter_ui1/common/common.dart';
-import 'package:flutter_ui1/repository/api_client.dart';
+import 'package:komodo_ui/login/login_page.dart';
+import 'package:komodo_ui/repository/api_repository.dart';
+import 'package:komodo_ui/repository/repository.dart';
+import 'package:komodo_ui/authentication/authentication.dart';
+import 'package:komodo_ui/splash/splash.dart';
+import 'package:komodo_ui/home/home.dart';
+import 'package:komodo_ui/common/common.dart';
+import 'package:komodo_ui/repository/api_client.dart';
 
 class SimpleBlocDelegate extends BlocDelegate {
   @override

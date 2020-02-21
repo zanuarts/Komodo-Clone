@@ -4,8 +4,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:meta/meta.dart';
 import 'package:equatable/equatable.dart';
 import 'package:bloc/bloc.dart';
-import 'package:flutter_ui1/repository/repository.dart';
-import 'package:flutter_ui1/authentication/authentication.dart';
+import 'package:komodo_ui/repository/repository.dart';
+import 'package:komodo_ui/authentication/authentication.dart';
 part 'login_event.dart';
 part 'login_state.dart';
 

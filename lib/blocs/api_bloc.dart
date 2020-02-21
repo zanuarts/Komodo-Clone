@@ -1,8 +1,8 @@
 import 'package:meta/meta.dart';
 import 'package:bloc/bloc.dart';
-import 'package:flutter_ui1/repository/repository.dart';
-import 'package:flutter_ui1/model/model.dart';
-import 'package:flutter_ui1/blocs/blocs.dart';
+import 'package:komodo_ui/repository/repository.dart';
+import 'package:komodo_ui/model/model.dart';
+import 'package:komodo_ui/blocs/blocs.dart';
 
 class ApiBloc extends Bloc<ApiEvent, ApiState>{
   final ApiRepository apiRepository;

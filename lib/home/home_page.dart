@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_ui1/main/halamansatu.dart';
-import 'package:flutter_ui1/main/halamandua.dart';
-import 'package:flutter_ui1/main/halamantiga.dart';
+import 'package:komodo_ui/main/halamansatu.dart';
+import 'package:komodo_ui/main/halamandua.dart';
+import 'package:komodo_ui/main/halamantiga.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 

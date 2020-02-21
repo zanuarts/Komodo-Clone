@@ -1,10 +1,8 @@
 import 'dart:async';
-
 import 'package:meta/meta.dart';
 import 'package:bloc/bloc.dart';
-import 'package:flutter_ui1/repository/repository.dart';
-
-import 'package:flutter_ui1/authentication/authentication.dart';
+import 'package:komodo_ui/repository/repository.dart';
+import 'package:komodo_ui/authentication/authentication.dart';
 
 class AuthenticationBloc
     extends Bloc<AuthenticationEvent, AuthenticationState> {

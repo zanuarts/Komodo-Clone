@@ -1,7 +1,7 @@
 import 'package:meta/meta.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:flutter_ui1/model/model.dart';
+import 'package:komodo_ui/model/model.dart';
 class ApiFactory {
   static const baseUrl = 'https://cbnusantara.id/api_komodo/login';
   final http.Client httpClient;

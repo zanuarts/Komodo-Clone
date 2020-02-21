@@ -1,7 +1,7 @@
 import 'package:meta/meta.dart';
 import 'package:equatable/equatable.dart';
 
-import 'package:flutter_ui1/model/model.dart';
+import 'package:komodo_ui/model/model.dart';
 
 abstract class ApiState extends Equatable {
   ApiState();

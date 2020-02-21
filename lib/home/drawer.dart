@@ -1,9 +1,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_ui1/authentication/authentication.dart';
-import 'package:flutter_ui1/main/halamandua.dart';
-import 'package:flutter_ui1/main/halamansatu.dart';
+import 'package:komodo_ui/authentication/authentication.dart';
+import 'package:komodo_ui/main/halamandua.dart';
+import 'package:komodo_ui/main/halamansatu.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 
