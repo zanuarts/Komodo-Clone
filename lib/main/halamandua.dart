@@ -49,7 +49,7 @@ class _MyappState extends State {
   Widget build(BuildContext context){
 
     //Color color = Theme.of(context).primaryColor;
-    color : Colors.deepOrangeAccent;
+    Colors.deepOrangeAccent;
 
     Widget submitSection = Container(
       

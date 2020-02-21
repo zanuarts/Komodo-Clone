@@ -1,17 +1,9 @@
-import 'dart:io';
-import 'package:flutter_ui1/components/globalkey.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_ui1/login/bloc/login_bloc.dart';
 import 'package:flutter_ui1/components/inputfield.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:http/io_client.dart';
 import 'package:uuid/uuid.dart';
-import 'dart:async';
-import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:convert' as convert;
-import 'package:flutter_ui1/home/home.dart';
 
 
 class LoginForm extends StatefulWidget {
@@ -20,38 +12,11 @@ class LoginForm extends StatefulWidget {
 }
 
 class _LoginFormState extends State<LoginForm> {
-  final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
   bool showPassword = true;
   var uuid = new Uuid();
   bool isLoading = false;
-
-  // Future<List> _validator() async {
-  //     if (_usernameController.text == '') {
-  //       Fluttertoast.showToast(
-  //           msg: "Username Tidak Boleh Kosong",
-  //           toastLength: Toast.LENGTH_SHORT,
-  //           gravity: ToastGravity.CENTER,
-  //           timeInSecForIos: 1,
-  //           backgroundColor: Colors.red,
-  //           textColor: Colors.white,
-  //           fontSize: 16.0);
-  //       return null;
-  //     }
-  //     if (_passwordController.text == '') {
-  //       Fluttertoast.showToast(
-  //           msg: "Password  Tidak Boleh Kosong",
-  //           toastLength: Toast.LENGTH_SHORT,
-  //           gravity: ToastGravity.CENTER,
-  //           timeInSecForIos: 1,
-  //           backgroundColor: Colors.red,
-  //           textColor: Colors.white,
-  //           fontSize: 16.0);
-  //       return null;
-  //     }
-  // }
-
   @override
   Widget build(BuildContext context) {
     _onLoginButtonPressed() {
@@ -62,16 +27,42 @@ class _LoginFormState extends State<LoginForm> {
         ),
       );
     }
-
     return BlocListener<LoginBloc, LoginState>(
       listener: (context, state) {
         if (state is LoginFailure) {
-          Scaffold.of(context).showSnackBar(
-            SnackBar(
-              content: Text('${state.error}'),
+          if (_usernameController.text == '') {
+            Fluttertoast.showToast(
+              msg: "Username Tidak Boleh Kosong",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.CENTER,
+              timeInSecForIos: 1,
               backgroundColor: Colors.red,
-            ),
-          );
+              textColor: Colors.white,
+              fontSize: 16.0);
+            return null;
+          }
+          if (_passwordController.text == '') {
+            Fluttertoast.showToast(
+              msg: "Password  Tidak Boleh Kosong",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.CENTER,
+              timeInSecForIos: 1,
+              backgroundColor: Colors.red,
+              textColor: Colors.white,
+              fontSize: 16.0);
+            return null;
+          }
+          if (_usernameController.text != '' && _passwordController != ''){
+            Fluttertoast.showToast(
+              msg: "Username / Password Salah!",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.CENTER,
+              timeInSecForIos: 1,
+              backgroundColor: Colors.red,
+              textColor: Colors.white,
+              fontSize: 16.0);
+            return null;
+          }
         }
       },
       child: BlocBuilder<LoginBloc, LoginState>(

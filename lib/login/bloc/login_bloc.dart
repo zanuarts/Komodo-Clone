@@ -1,14 +1,11 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:meta/meta.dart';
 import 'package:equatable/equatable.dart';
 import 'package:bloc/bloc.dart';
 import 'package:flutter_ui1/repository/repository.dart';
-
 import 'package:flutter_ui1/authentication/authentication.dart';
-
 part 'login_event.dart';
 part 'login_state.dart';
 
