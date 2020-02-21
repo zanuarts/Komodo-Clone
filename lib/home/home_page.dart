@@ -23,7 +23,7 @@ class Home extends StatefulWidget {
 }
 
 class _HalamannavState extends State {
-  int currentPage = 0;
+  int currentPage = 1;
   int _selectedIndex = 1;
     
 
