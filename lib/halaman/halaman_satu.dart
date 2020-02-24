@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import '../home/drawer.dart';
-//import 'package:flutter_ui1/components/drawer.dart';
-
+import 'package:komodo_ui/home/drawer.dart';
 
 void main(){
   runApp(
@@ -12,33 +10,52 @@ void main(){
   );
 }
 
-class Halamansatu extends StatelessWidget {
+class Halamansatu extends StatefulWidget {
+  @override
+  _MyappState createState() => _MyappState();
+}
+
+class _MyappState extends State {
+
 
   @override
   Widget build(BuildContext context){
-    return MaterialApp(
-      home : Scaffold(
-        backgroundColor: Colors.white,
-        appBar: AppBar(
-          title: new Text("Home", style: TextStyle(
-              fontFamily: 'Helvetica'
-          ),),
 
-          centerTitle: true,
-          backgroundColor: Colors.deepOrangeAccent,
-        ),
-        drawer: DrawerApp(),
-        body: Container(
-          padding: EdgeInsets.all(10.0),
-          child: Column(
-            children: <Widget>[
-              Text(
-                'Hei There',
-              ),
-            ],
+    //Color color = Theme.of(context).primaryColor;
+    Colors.deepOrangeAccent;
+  return Scaffold(
+      appBar: AppBar(
+        title: new Text("Home"),
+        centerTitle: true,
+        backgroundColor: Colors.deepOrangeAccent,
+      ),
+      drawer: DrawerApp(),
+      body: ListView(
+        children: [
+        ],
+        padding: EdgeInsets.all(20.0),
+      ),
+    );
+  }
+
+  Column _buildButtonColumn(IconData icon, String label) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Icon(icon),
+        Container(
+          margin: const EdgeInsets.only(top: 8),
+          child: Text(
+            label,
+            style: TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w400,
+
+            ),
           ),
         ),
-      ),
+      ],
     );
   }
 }
