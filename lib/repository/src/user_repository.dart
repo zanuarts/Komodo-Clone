@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
 import 'dart:convert' as convert;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class UserRepository {
   final storage = new FlutterSecureStorage();
@@ -19,12 +20,22 @@ class UserRepository {
       var mess = convert.jsonDecode(s.body);
       if (mess['status'] == 'failed'){
         rt = mess['status'];
-        print(mess);
+
       } else {
-        print(mess);
-        print(rt);
-        rt = "bearer ${mess['auth']['jwt']['token']}";
-        await storage.write(key: 'bearer', value: mess['auth']['jwt']['token']);
+//        rt = "bearer ${mess['auth']['jwt']['token']}";
+//        await storage.write(key: 'bearer', value: mess['auth']['jwt']['token']);
+      var username = mess['auth']['username'];
+      var token = mess['auth']['token'];
+      var full_name = mess['auth']['full_name'];
+      var role_name = mess['auth']['role_name'];
+      var photo = mess['auth']['photo'];
+
+      SharedPreferences pref = await SharedPreferences.getInstance();
+      pref.setString('username', username);
+      pref.setString('token', token);
+      pref.setString('full_name', full_name);
+      pref.setString('role_name', role_name);
+      pref.setString('photo', photo);
       }
 
     });

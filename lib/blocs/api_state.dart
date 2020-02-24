@@ -11,7 +11,7 @@ abstract class ApiState extends Equatable {
 }
 class ApiLoading extends ApiState {}
 class ApiLoaded extends ApiState {
-  final Personal personal;
+  final PersonalUpd personal;
   ApiLoaded({@required this.personal}):assert(personal != null);
 
   @override

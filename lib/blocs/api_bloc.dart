@@ -16,7 +16,7 @@ class ApiBloc extends Bloc<ApiEvent, ApiState>{
     if (event is FetchPersonal){
       yield ApiLoading();
       try {
-        final Personal personal = await apiRepository.getProfile('');
+        final PersonalUpd personal = await apiRepository.getProfile('');
         yield ApiLoaded(personal: personal);
       } catch(_){
         yield ApiError();
