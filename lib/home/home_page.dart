@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:komodo_ui/main/halamansatu.dart';
-import 'package:komodo_ui/main/halamandua.dart';
-import 'package:komodo_ui/main/halamantiga.dart';
-import 'package:komodo_ui/main/halaman_empat.dart';
+import 'package:komodo_ui/halaman/halaman_satu.dart';
+import 'package:komodo_ui/halaman/halaman_dua.dart';
+import 'package:komodo_ui/halaman/halaman_tiga.dart';
+import 'package:komodo_ui/halaman/halaman_empat.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:komodo_ui/extensions/fancy_bottom_navigation-0.3.2/lib/fancy_bottom_navigation.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+
 
 void main(){
   runApp(
@@ -56,8 +56,6 @@ class _HalamannavState extends State {
       onWillPop: onWillPop,
       child: SafeArea(
         child: Scaffold(
-          
-
           body: _widgetOptions.elementAt(_selectedIndex),
           bottomNavigationBar : FancyBottomNavigation(
             barBackgroundColor: Color(0xFF404040),

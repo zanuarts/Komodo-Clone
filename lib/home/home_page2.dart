@@ -7,6 +7,7 @@ import 'package:komodo_ui/home/home_page.dart';
 class HomePage extends StatelessWidget {
   final ApiRepository apiRepository;
   HomePage({Key key,@required this.apiRepository}):assert(apiRepository != null);
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
