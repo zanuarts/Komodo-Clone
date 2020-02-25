@@ -7,6 +7,7 @@ class SplashPage extends StatelessWidget {
       body: Center(
         child: Text('Splash Screen'),
       ),
+      backgroundColor: Colors.blueAccent,
     );
   }
 }
