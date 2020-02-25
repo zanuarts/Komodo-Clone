@@ -1,14 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:komodo_ui/home/drawer.dart';
 
-void main(){
-  runApp(
-      new MaterialApp(
-        title:"Halaman satu",
-        home: new Halamansatu(),
-      )
-  );
-}
 
 class Halamansatu extends StatefulWidget {
   @override
