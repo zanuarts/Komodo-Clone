@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:komodo_ui/home/drawer.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Halamandua extends StatefulWidget {
   @override
@@ -8,6 +9,24 @@ class Halamandua extends StatefulWidget {
 }
 
 class _MyappState extends State {
+  var foto;
+  var name;
+  
+  Future <String> getData() async{
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    setState(() {
+      foto = pref.getString('photo');
+      name = pref.getString('full_name');
+      print('hiii');
+    });
+  }
+
+  @override
+  void initState(){
+    getData();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context){
     Color color = Theme.of(context).primaryColor;
@@ -32,7 +51,15 @@ class _MyappState extends State {
                 padding: const EdgeInsets.only(bottom:10, left: 25),
                 child:  CircleAvatar(
                   radius: 40,
-                  backgroundColor: Colors.green,  
+                  child: ClipOval(
+                  child: Image.network(
+                    '$foto',
+                    width: 200,
+                    height: 200,
+                    fit: BoxFit.cover,
+                  ),
+                  )
+                  // backgroundColor: Colors.green,  
                 ),
               ),
               Padding(
@@ -41,7 +68,7 @@ class _MyappState extends State {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text("Good Day", style: TextStyle(color: Colors.white),),
-                    Text('Nama User', style: TextStyle(color: Colors.white),),
+                    Text('$name', style: TextStyle(color: Colors.white),),
                   ],
                 ),
               )
@@ -119,15 +146,159 @@ class _MyappState extends State {
             height: 150,
             margin: const EdgeInsets.all(10),
             decoration: BoxDecoration(
-              color: Colors.blueAccent,
+              color: Colors.grey,
               borderRadius: BorderRadius.all(Radius.circular(10)),
             ),
-            child: Center(
-              child: Text(
-                "Log Absen",
-                style: TextStyle(color : Colors.white),
-              ),
-            ),
+            // child: ListView(
+            //   children: <Widget>[
+            //     Container(
+            //       margin: const EdgeInsets.only(top:1),
+            //       height: 25,
+            //       width: 85,
+            //       decoration: BoxDecoration(
+            //         color: Colors.white60,
+            //       ),
+            //       child: Row(
+            //       children: <Widget>[
+            //         Container(
+            //           margin: const EdgeInsets.all(5),
+            //           alignment: Alignment.center,
+            //           height: 20,
+            //           width: 80,
+            //           decoration: BoxDecoration(
+            //             color: Colors.green,
+            //             borderRadius: BorderRadius.all(Radius.circular(5))
+            //           ),
+            //           child: Text(
+            //             "Excellent"
+            //           ),
+            //         ),
+            //         Text(
+            //           "Nama User checked in at Time",
+            //         ),
+            //       ],
+            //     ),
+            //     ),
+            //     Container(
+            //       margin: const EdgeInsets.only(top:1),
+            //       height: 25,
+            //       width: 85,
+            //       decoration: BoxDecoration(
+            //         color: Colors.white60,
+            //       ),
+            //       child: Row(
+            //         children: <Widget>[
+            //           Container(
+            //             margin: const EdgeInsets.all(5),
+            //             alignment: Alignment.center,
+            //             height: 20,
+            //             width: 80,
+            //             decoration: BoxDecoration(
+            //               color: Colors.blue,
+            //               borderRadius: BorderRadius.all(Radius.circular(5))
+            //             ),
+            //             child: Text(
+            //               "Normal"
+            //             ),
+            //           ),
+            //           Text(
+            //             "Nama User checked in at Time",
+            //           ),
+            //         ],
+            //       ),
+            //     ),
+            //     Container(
+            //       margin: const EdgeInsets.only(top:1),
+            //       height: 25,
+            //       width: 85,
+            //       decoration: BoxDecoration(
+            //         color: Colors.white60,
+            //       ),
+            //       child: Row(
+            //         children: <Widget>[
+            //           Container(
+            //             margin: const EdgeInsets.all(5),
+            //             alignment: Alignment.center,
+            //             height: 20,
+            //             width: 80,
+            //             decoration: BoxDecoration(
+            //               color: Colors.yellow,
+            //               borderRadius: BorderRadius.all(Radius.circular(5))
+            //             ),
+            //             child: Text(
+            //               "Late"
+            //             ),
+            //           ),
+            //           Text(
+            //             "Nama User checked in at Time",
+            //           ),
+            //         ],
+            //       ),
+            //     ),
+            //     Container(
+            //       margin: const EdgeInsets.only(top:1),
+            //       height: 25,
+            //       width: 85,
+            //       decoration: BoxDecoration(
+            //         color: Colors.white60,
+            //       ),
+            //       child: Row(
+            //         children: <Widget>[
+            //           Container(
+            //             margin: const EdgeInsets.all(5),
+            //             width: 80,  
+            //             alignment: Alignment.center,
+            //             height: 20,
+            //             decoration: BoxDecoration(
+            //               color: Colors.red,
+            //               borderRadius: BorderRadius.all(Radius.circular(5))
+            //             ),
+            //               child: Text(
+            //                 "Danger",
+            //               ),
+            //           ),
+            //           Text(
+            //             "Nama User checked in at Time",
+            //           ),
+            //         ],
+            //       ),
+            //     ),
+            //   ],
+            // ),
+            child: ListView.builder(
+              itemCount: 100,
+              itemBuilder: (BuildContext context, int index){
+                return Padding(
+                  padding: EdgeInsets.symmetric(vertical: 3),
+                  child:  Container(
+                  margin: const EdgeInsets.only(top:1),
+                  height: 25,
+                  width: 85,
+                  decoration: BoxDecoration(
+                    color: Colors.white60,
+                  ),
+                  child: Row(
+                    children: <Widget>[
+                      Container(
+                        margin: const EdgeInsets.all(5),
+                        width: 80,  
+                        alignment: Alignment.center,
+                        height: 20,
+                        decoration: BoxDecoration(
+                          color: Colors.red,
+                          borderRadius: BorderRadius.all(Radius.circular(5))
+                        ),
+                          child: Text(
+                            "Danger",
+                          ),
+                      ),
+                      Text(
+                        "Nama User checked in at Time",
+                      ),
+                    ],
+                  ),
+                ));
+            }),
           ),
         ],
       ),

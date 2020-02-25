@@ -24,6 +24,7 @@ class UserRepository {
       } else {
 //        rt = "bearer ${mess['auth']['jwt']['token']}";
 //        await storage.write(key: 'bearer', value: mess['auth']['jwt']['token']);
+      var id = mess['auth']['id'];
       var username = mess['auth']['username'];
       var token = mess['auth']['token'];
       var full_name = mess['auth']['full_name'];
