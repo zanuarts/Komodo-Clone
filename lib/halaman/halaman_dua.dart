@@ -3,6 +3,8 @@ import 'package:komodo_ui/home/drawer.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:intl/intl.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
+import 'package:location/location.dart';
 
 class Halamandua extends StatefulWidget {
   @override
@@ -12,30 +14,51 @@ class Halamandua extends StatefulWidget {
 class _MyappState extends State {
   var foto;
   var name;
+  
+  Location location = Location();
+  double long;
+  double lat;
+  LatLng _userPostion = LatLng(0, 0);
+  // Map<String, double> currentLocation;
 
+  getLocation() async {
+    var location = new Location();
+    location.onLocationChanged().listen((LocationData currentLocation) {
+      setState(() {
+        lat = currentLocation.latitude;
+        long = currentLocation.longitude;
+        _userPostion = LatLng(lat, long);
+        
+      });
+    });
+  }
+
+  // GOOGLE MAPS
   final Set<Marker> _markers = {};
   GoogleMapController mapController;
   // final LatLng _center = const LatLng(45.521563, -122.677433);
-  LatLng _center = LatLng(-6.8982567,107.6180517); // bandung
+  LatLng _center = LatLng(-6.897980, 107.619328); // bandung
   
   @override
   void initState() {
     getData();
     _markers.add(
       Marker(
-        markerId: MarkerId("-6.8982567,107.6180517"),
+        markerId: MarkerId("-6.897980, 107.619328"),
         position: _center,
         icon: BitmapDescriptor.defaultMarker,
       ),
     );
     super.initState();
+    getLocation();
+    // getSharedPreferences();
   }
 
   void _onMapCreated(GoogleMapController controller) {
     mapController = controller;
   }
   
-  
+  // FOTO AND NAME
   Future <String> getData() async{
     SharedPreferences pref = await SharedPreferences.getInstance();
     setState(() {
@@ -104,7 +127,7 @@ class _MyappState extends State {
         )
       ),
       drawer: DrawerApp(),
-      body: Column(
+      body: ListView(
         children: <Widget>[
           Row(
             children: <Widget>[
@@ -116,7 +139,15 @@ class _MyappState extends State {
                   Icons.fingerprint,
                 ),
                 iconSize: 40,
-                onPressed: null,
+                onPressed:(){
+                  Alert(
+                    context: context, 
+                    title: "Checkpoint", 
+                    desc: "SUKSES"
+                  ).show();
+                },
+                
+                
               )
             ),
           ),
@@ -160,13 +191,13 @@ class _MyappState extends State {
             margin: const EdgeInsets.symmetric(horizontal: 10),
             decoration: BoxDecoration(
               color: Colors.blueAccent,
-              borderRadius: BorderRadius.all(Radius.circular(10)),
+              borderRadius: BorderRadius.all(Radius.circular(20)),
             ),
             child: GoogleMap(
               onMapCreated: _onMapCreated,
               initialCameraPosition: CameraPosition(
               target: _center,
-              zoom: 11.0,
+              zoom: 14.0,
               ),
               markers: _markers,
             ),
@@ -177,6 +208,13 @@ class _MyappState extends State {
             //   ),
             // ),
           ),
+          Container(
+            padding: const EdgeInsets.only(top: 5),
+            child: Text(
+              "Check in Activity",
+            ),
+          ),
+          
           Container(
             height: 150,
             margin: const EdgeInsets.all(10),
