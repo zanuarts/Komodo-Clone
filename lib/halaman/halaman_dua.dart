@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:komodo_ui/home/drawer.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:intl/intl.dart';
 
 class Halamandua extends StatefulWidget {
   @override
@@ -11,6 +12,7 @@ class Halamandua extends StatefulWidget {
 class _MyappState extends State {
   var foto;
   var name;
+  
   
   Future <String> getData() async{
     SharedPreferences pref = await SharedPreferences.getInstance();
@@ -29,6 +31,10 @@ class _MyappState extends State {
 
   @override
   Widget build(BuildContext context){
+    DateTime now = DateTime.now();
+    String formattedDate = DateFormat.yMMMMEEEEd().format(now);
+    String formattedTime = DateFormat('Hm').format(now);
+    // DateFormat('kk:mm:ss \n EEE d MMM').format(now);
     Color color = Theme.of(context).primaryColor;
     return Scaffold(
       appBar: AppBar(
@@ -106,7 +112,7 @@ class _MyappState extends State {
                         ),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 5),
-                          child:Text("Date", style: TextStyle(color: Colors.black),),
+                          child:Text(formattedDate, style: TextStyle(color: Colors.black),),
                         ),
                       ],
                     ),
@@ -118,7 +124,7 @@ class _MyappState extends State {
                         ),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 5),
-                          child:Text("Time", style: TextStyle(color: Colors.black),),
+                          child:Text(formattedTime, style: TextStyle(color: Colors.black),),
                         ),
                       ],
                     ),
@@ -271,7 +277,6 @@ class _MyappState extends State {
                 return Padding(
                   padding: EdgeInsets.symmetric(vertical: 3),
                   child:  Container(
-                  margin: const EdgeInsets.only(top:1),
                   height: 25,
                   width: 85,
                   decoration: BoxDecoration(
