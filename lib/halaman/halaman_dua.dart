@@ -12,6 +12,28 @@ class Halamandua extends StatefulWidget {
 class _MyappState extends State {
   var foto;
   var name;
+
+  final Set<Marker> _markers = {};
+  GoogleMapController mapController;
+  // final LatLng _center = const LatLng(45.521563, -122.677433);
+  LatLng _center = LatLng(-6.8982567,107.6180517); // bandung
+  
+  @override
+  void initState() {
+    getData();
+    _markers.add(
+      Marker(
+        markerId: MarkerId("-6.8982567,107.6180517"),
+        position: _center,
+        icon: BitmapDescriptor.defaultMarker,
+      ),
+    );
+    super.initState();
+  }
+
+  void _onMapCreated(GoogleMapController controller) {
+    mapController = controller;
+  }
   
   
   Future <String> getData() async{
@@ -19,15 +41,14 @@ class _MyappState extends State {
     setState(() {
       foto = pref.getString('photo');
       name = pref.getString('full_name');
-      print('hiii');
     });
   }
 
-  @override
-  void initState(){
-    getData();
-    super.initState();
-  }
+  // @override
+  // void initState(){
+  //   getData();
+  //   super.initState();
+  // }
 
   @override
   Widget build(BuildContext context){
@@ -141,12 +162,20 @@ class _MyappState extends State {
               color: Colors.blueAccent,
               borderRadius: BorderRadius.all(Radius.circular(10)),
             ),
-            child: Center(
-              child: Text(
-                "Maps",
-                style: TextStyle(color : Colors.white),
+            child: GoogleMap(
+              onMapCreated: _onMapCreated,
+              initialCameraPosition: CameraPosition(
+              target: _center,
+              zoom: 11.0,
               ),
+              markers: _markers,
             ),
+            // child: Center(
+            //   child: Text(
+            //     "Maps",
+            //     style: TextStyle(color : Colors.white),
+            //   ),
+            // ),
           ),
           Container(
             height: 150,
