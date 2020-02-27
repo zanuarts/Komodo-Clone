@@ -60,6 +60,7 @@ class _MyappState extends State {
     );
     super.initState();
     getLocation();
+    getTime();
     // BitmapDescriptor.fromAssetImage(
     //       ImageConfiguration(size: Size(48, 48)), 'assets/user_icon.png')
     //       .then((onValue) {
@@ -89,23 +90,62 @@ class _MyappState extends State {
     });
   }
 
+  // Time
+  var formattedDate = '';
+  var formattedTime = '';
+  double hourNow = 0.0;
+  getTime(){
+    DateTime now = DateTime.now();
+    String dateNow = DateFormat.yMMMMEEEEd().format(now);
+    String timeNow = DateFormat('kk.mm').format(now);
+    double timeNowDouble = double.parse(timeNow);
+    setState(() {
+      hourNow = timeNowDouble;
+      formattedDate = dateNow;
+      formattedTime = timeNow;
+    });
+  }
+
   // @override
   // void initState(){
   //   getData();
   //   super.initState();
   // }
+  void _absen(context, pr) async{
+    getTime();
+    pr.show();
+    if (hourNow <= 08.00){
+      print("Excellent");
+    }
+    else if (hourNow <= 08.30){
+      print("Normal");
+    }
+    else if (hourNow <= 09.00){
+      print("Late");
+    }
+    else if (hourNow > 09.00){
+      print("Danger");
+      // print(pr);
+      // pr.hide(true);
+      
+    }
+    
+      Future.delayed(Duration(seconds: 1)).then((onValue){
+        print("PR status  ${pr.isShowing()}" );
+          if(pr.isShowing())
+            pr.hide();
+          print("PR status  ${pr.isShowing()}" );
+      });
 
-  // void _periksa(
-  //   if(DateTime()>)
-  // )
+  }
 
   @override
   Widget build(BuildContext context){
-    DateTime now = DateTime.now();
-    String formattedDate = DateFormat.yMMMMEEEEd().format(now);
-    String formattedTime = DateFormat('Hm').format(now);
+    pr = new ProgressDialog(context, type: ProgressDialogType.Normal);
+    // date
+    
     // DateFormat('kk:mm:ss \n EEE d MMM').format(now);
-    Color color = Theme.of(context).primaryColor;
+    
     return Scaffold(
       appBar: AppBar(
         title: new Text(
@@ -168,7 +208,8 @@ class _MyappState extends State {
                 ),
                 iconSize: 40,
                 onPressed:(){
-                  Alert(context: context, title: "RFLUTTER", desc: "Flutter is awesome.").show();
+                  _absen(context, pr);
+                  // Alert(context: context, title: "RFLUTTER", desc: "Flutter is awesome.").show();
                 },
                 
                 
@@ -224,6 +265,7 @@ class _MyappState extends State {
               zoom: 14.0,
               ),
               markers: _markers,
+              // markers: user_markers,
             ),
             // child: Center(
             //   child: Text(
