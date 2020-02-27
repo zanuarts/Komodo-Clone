@@ -5,6 +5,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:intl/intl.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:location/location.dart';
+import 'package:progress_dialog/progress_dialog.dart';
+
 
 class Halamandua extends StatefulWidget {
   @override
@@ -12,14 +14,15 @@ class Halamandua extends StatefulWidget {
 }
 
 class _MyappState extends State {
+  ProgressDialog pr;
   var foto;
   var name;
-  
+
+  //get location
   Location location = Location();
   double long;
   double lat;
   LatLng _userPostion = LatLng(0, 0);
-  // Map<String, double> currentLocation;
 
   getLocation() async {
     var location = new Location();
@@ -28,17 +31,23 @@ class _MyappState extends State {
         lat = currentLocation.latitude;
         long = currentLocation.longitude;
         _userPostion = LatLng(lat, long);
-        
+        print("Lokasi di : ");
+        print(_userPostion);
       });
     });
   }
 
   // GOOGLE MAPS
   final Set<Marker> _markers = {};
+  // final Set<Marker> user_markers = {};
   GoogleMapController mapController;
   // final LatLng _center = const LatLng(45.521563, -122.677433);
   LatLng _center = LatLng(-6.897980, 107.619328); // bandung
   
+  
+
+  BitmapDescriptor myIcon;
+
   @override
   void initState() {
     getData();
@@ -51,6 +60,19 @@ class _MyappState extends State {
     );
     super.initState();
     getLocation();
+    // BitmapDescriptor.fromAssetImage(
+    //       ImageConfiguration(size: Size(48, 48)), 'assets/user_icon.png')
+    //       .then((onValue) {
+    //     myIcon = onValue;
+    //   });
+    // user_markers.add(
+    //   Marker(
+    //     markerId: MarkerId(_userPostion.toString()),
+    //     position: _userPostion,
+    //     icon: myIcon,
+    //   ),
+    // );
+      
     // getSharedPreferences();
   }
 
@@ -72,6 +94,10 @@ class _MyappState extends State {
   //   getData();
   //   super.initState();
   // }
+
+  // void _periksa(
+  //   if(DateTime()>)
+  // )
 
   @override
   Widget build(BuildContext context){
@@ -127,24 +153,22 @@ class _MyappState extends State {
         )
       ),
       drawer: DrawerApp(),
-      body: ListView(
+      body: Column(
         children: <Widget>[
           Row(
             children: <Widget>[
               Padding(
             padding: const EdgeInsets.only(left: 40, top: 15, bottom: 15),
             child: FloatingActionButton(
+              elevation: 0.0,
               child: new IconButton(
                 icon : new Icon(
                   Icons.fingerprint,
+                  
                 ),
                 iconSize: 40,
                 onPressed:(){
-                  Alert(
-                    context: context, 
-                    title: "Checkpoint", 
-                    desc: "SUKSES"
-                  ).show();
+                  Alert(context: context, title: "RFLUTTER", desc: "Flutter is awesome.").show();
                 },
                 
                 
@@ -187,7 +211,7 @@ class _MyappState extends State {
             ],
           ),
           Container(
-            height: 175,
+            height: 135,
             margin: const EdgeInsets.symmetric(horizontal: 10),
             decoration: BoxDecoration(
               color: Colors.blueAccent,
