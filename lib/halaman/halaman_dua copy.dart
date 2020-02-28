@@ -61,7 +61,21 @@ class _MyappState extends State {
     super.initState();
     getLocation();
     getTime();
-}
+    // BitmapDescriptor.fromAssetImage(
+    //       ImageConfiguration(size: Size(48, 48)), 'assets/user_icon.png')
+    //       .then((onValue) {
+    //     myIcon = onValue;
+    //   });
+    // user_markers.add(
+    //   Marker(
+    //     markerId: MarkerId(_userPostion.toString()),
+    //     position: _userPostion,
+    //     icon: myIcon,
+    //   ),
+    // );
+      
+    // getSharedPreferences();
+  }
 
   void _onMapCreated(GoogleMapController controller) {
     mapController = controller;
@@ -92,6 +106,11 @@ class _MyappState extends State {
     });
   }
 
+  // @override
+  // void initState(){
+  //   getData();
+  //   super.initState();
+  // }
   void _absen(context, pr) async{
     getTime();
     pr.show();
@@ -112,7 +131,7 @@ class _MyappState extends State {
     }
     else if (hourNow > 09.00){
       print("Danger");
-
+      // Alert(context: context, title: "RFLUTTER", desc: "Flutter is awesome.").show();
     }
     
       
@@ -122,16 +141,62 @@ class _MyappState extends State {
   @override
   Widget build(BuildContext context){
     pr = new ProgressDialog(context, type: ProgressDialogType.Normal);
+    // date
     
-    return LayoutBuilder(
-      builder: (context, constraints){
-        return Scaffold(
+    // DateFormat('kk:mm:ss \n EEE d MMM').format(now);
+    
+    return Scaffold(
+      // appBar: AppBar(
+      //   title: new Text(
+      //     "Absensi", 
+      //     style: TextStyle(
+      //     ),
+      //   ),
+      //   shape: RoundedRectangleBorder(
+      //     borderRadius: BorderRadius.vertical(
+      //       bottom:Radius.circular(30),
+      //     ),
+      //   ),
+      //   bottom: PreferredSize(
+      //     preferredSize: const Size.fromHeight(88.0),
+      //     // Di isi child, untuk widget yang akan ditampilkan
+      //     child: Row(
+      //       children:<Widget>[
+      //         Padding(
+      //           padding: const EdgeInsets.only(bottom:10, left: 25),
+      //           child:  CircleAvatar(
+      //             radius: 40,
+      //             child: ClipOval(
+      //             child: Image.network(
+      //               '$foto',
+      //               width: 200,
+      //               height: 200,
+      //               fit: BoxFit.cover,
+      //             ),
+      //             )
+      //             // backgroundColor: Colors.green,  
+      //           ),
+      //         ),
+      //         Padding(
+      //           padding: const EdgeInsets.symmetric(horizontal: 15),
+      //           child: Column(
+      //             crossAxisAlignment: CrossAxisAlignment.start,
+      //             children: <Widget>[
+      //               Text("Good Day", style: TextStyle(color: Colors.white),),
+      //               Text('$name', style: TextStyle(color: Colors.white),),
+      //             ],
+      //           ),
+      //         )
+      //       ],
+      //     ),
+      //   )
+      // ),
       drawer: DrawerApp(),
       body: Column(
         children: <Widget>[
           Container(
-            height:160,
-            
+            height:150,
+            width: 100,
             decoration: BoxDecoration(
               color: Colors.deepOrange,
               borderRadius: BorderRadius.only(bottomLeft: Radius.circular(30), bottomRight:Radius.circular(30)),
@@ -139,49 +204,13 @@ class _MyappState extends State {
             ),
             child: Column(
               children: <Widget>[
-                // ABSENCE
-                Container(
-                  padding: EdgeInsets.all(10),
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    "Absence",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 30,
-                      color: Colors.white,
-                    ),
+                Text(
+                  "Absence",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
                   ),
                 ),
-                // ROW UNTUK FOTO DAN NAMA
-                Row(
-                  children: <Widget>[
-                    //FOTO
-                    Container(
-                      padding: const EdgeInsets.only(left:35, bottom: 10, right: 10, top: 10),
-                      child:  CircleAvatar(
-                        radius: 40,
-                        child: ClipOval(
-                        child: Image.network(
-                          '$foto',
-                          width: 200,
-                          height: 200,
-                          fit: BoxFit.cover,
-                        ),
-                        )
-                      ),
-                    ),
-                    Container(
-                      padding: EdgeInsets.all(10),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text("Good Day", style: TextStyle(color: Colors.white),),
-                          Text('$name', style: TextStyle(color: Colors.white),),
-                        ]
-                      )
-                    )
-                  ],
-                )
               ],
             ),
             
@@ -440,8 +469,6 @@ class _MyappState extends State {
           ),
         ],
       ),
-        );
-      },
     );
   }
 }
