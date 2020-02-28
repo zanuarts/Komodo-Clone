@@ -12,7 +12,7 @@ class UserRepository {
     @required String password,
 })async {
     var rt = '';
-    var url = "https://cbnusantara.id/api_komodo/login";
+    var url = "https://cbnusantara.id/api_komodo_dev/login";
     await http.post(url, body: {
       "username": username,
       "password": password

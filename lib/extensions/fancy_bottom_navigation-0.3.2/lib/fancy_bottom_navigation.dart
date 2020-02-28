@@ -22,7 +22,8 @@ class FancyBottomNavigation extends StatefulWidget {
       this.activeIconColor,
       this.inactiveIconColor,
       this.textColor,
-      this.barBackgroundColor, int currentPage})
+      this.barBackgroundColor, 
+      int currentPage})
       : assert(onTabChangedListener != null),
         assert(tabs != null),
         assert(tabs.length > 1 && tabs.length < 5);
@@ -226,7 +227,7 @@ class FancyBottomNavigationState extends State<FancyBottomNavigation>
   }
 
   _initAnimationAndStart(double from, double to) {
-    _circleIconAlpha = 1;
+    _circleIconAlpha = 0;
 
     Future.delayed(Duration(milliseconds: ANIM_DURATION ~/ 5), () {
       setState(() {
@@ -235,7 +236,7 @@ class FancyBottomNavigationState extends State<FancyBottomNavigation>
     }).then((_) {
       Future.delayed(Duration(milliseconds: (ANIM_DURATION ~/ 5 * 3)), () {
         setState(() {
-          _circleIconAlpha = 0;
+          _circleIconAlpha = 1;
         });
       });
     });

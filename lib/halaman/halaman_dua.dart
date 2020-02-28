@@ -111,14 +111,17 @@ class _MyappState extends State {
           print("Late");
           if(pr.isShowing())
             pr.hide();
+            Alert(context: context, title: "WARNING", desc: "Anda telat").show();
         }
         else if (hourNow > 09.00){
           print("Danger");
           if(pr.isShowing())
             pr.hide();
+            Alert(context: context, title: "WARNING", desc: "Anda telat").show();
+            FloatingActionButton(backgroundColor: Colors.yellow,);
         }
-          
           print("PR status  ${pr.isShowing()}" );
+          
       });
     
     
@@ -209,18 +212,15 @@ class _MyappState extends State {
                 padding: const EdgeInsets.only(left: 10, top: 25, bottom: 15),
                 // child: Container(
                 child: FloatingActionButton(
+                  backgroundColor: Colors.blueGrey,
                   elevation: 0.0,
                   child: Icon(
                     Icons.fingerprint,
                     size: 40,
+                    
                   ),
                   onPressed:(){
                     _absen(context, pr);
-                    // Alert(context: context, title: "RFLUTTER", desc: "Flutter is awesome.").show();
-                    // setState(() {
-                    //   print('color');
-                    //   colors = Colors.black;
-                    // });
                   },
                 ),
               ),
@@ -456,7 +456,7 @@ class _MyappState extends State {
                           ),
                       ),
                       Text(
-                        "Nama User checked in at Time",
+                        '$name checked in at $hourNow',
                       ),
                     ],
                   ),
