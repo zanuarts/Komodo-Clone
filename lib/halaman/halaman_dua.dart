@@ -97,23 +97,30 @@ class _MyappState extends State {
     pr.show();
     Future.delayed(Duration(seconds: 1)).then((onValue){
         print("PR status  ${pr.isShowing()}" );
+        if (hourNow <= 08.00){
+          print("Excellent");
           if(pr.isShowing())
             pr.hide();
+        }
+        else if (hourNow <= 08.30){
+          print("Normal");
+          if(pr.isShowing())
+            pr.hide();
+        }
+        else if (hourNow <= 09.00){
+          print("Late");
+          if(pr.isShowing())
+            pr.hide();
+        }
+        else if (hourNow > 09.00){
+          print("Danger");
+          if(pr.isShowing())
+            pr.hide();
+        }
+          
           print("PR status  ${pr.isShowing()}" );
       });
-    if (hourNow <= 08.00){
-      print("Excellent");
-    }
-    else if (hourNow <= 08.30){
-      print("Normal");
-    }
-    else if (hourNow <= 09.00){
-      print("Late");
-    }
-    else if (hourNow > 09.00){
-      print("Danger");
-
-    }
+    
     
       
 
@@ -135,7 +142,17 @@ class _MyappState extends State {
             decoration: BoxDecoration(
               color: Colors.deepOrange,
               borderRadius: BorderRadius.only(bottomLeft: Radius.circular(30), bottomRight:Radius.circular(30)),
-              
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.deepOrangeAccent,
+                  blurRadius: 20.0, // has the effect of softening the shadow
+                  spreadRadius: 1, // has the effect of extending the shadow
+                  offset: Offset(
+                    5.0, // horizontal, move right 10
+                    5.0, // vertical, move down 10
+                  ),
+                )
+              ],
             ),
             child: Column(
               children: <Widget>[
@@ -189,35 +206,26 @@ class _MyappState extends State {
           Row(
             children: <Widget>[
               Padding(
-            padding: const EdgeInsets.only(left: 40, top: 15, bottom: 15),
-            // child: Container(
-              
-            child: FloatingActionButton(
-              elevation: 0.0,
-              child: new IconButton(
-                // color: colors,
-                icon : new Icon(
-                  Icons.fingerprint,
-                  
+                padding: const EdgeInsets.only(left: 10, top: 25, bottom: 15),
+                // child: Container(
+                child: FloatingActionButton(
+                  elevation: 0.0,
+                  child: Icon(
+                    Icons.fingerprint,
+                    size: 40,
+                  ),
+                  onPressed:(){
+                    _absen(context, pr);
+                    // Alert(context: context, title: "RFLUTTER", desc: "Flutter is awesome.").show();
+                    // setState(() {
+                    //   print('color');
+                    //   colors = Colors.black;
+                    // });
+                  },
                 ),
-                iconSize: 40,
-                
-                onPressed:(){
-                  _absen(context, pr);
-                  // Alert(context: context, title: "RFLUTTER", desc: "Flutter is awesome.").show();
-                  // setState(() {
-                  //   print('color');
-                  //   colors = Colors.black;
-                  // });
-                },
-                
-                
-              )
-            ),
-          // ),
               ),
           Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
+                padding: const EdgeInsets.only(left: 10, top: 20),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
@@ -252,8 +260,19 @@ class _MyappState extends State {
             ],
           ),
           Container(
-            height: 135,
-            margin: const EdgeInsets.symmetric(horizontal: 10),
+            padding: const EdgeInsets.only(top: 5, left: 10),
+            alignment: Alignment.centerLeft,
+            child: Text(
+              "Check in Location",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                
+              ),
+            ),
+          ),
+          Container(
+            height: 125,
+            margin: const EdgeInsets.all(10),
             decoration: BoxDecoration(
               color: Colors.blueAccent,
               borderRadius: BorderRadius.all(Radius.circular(20)),
@@ -275,17 +294,22 @@ class _MyappState extends State {
             // ),
           ),
           Container(
-            padding: const EdgeInsets.only(top: 5),
+            padding: const EdgeInsets.only(left:10),
+            alignment: Alignment.centerLeft,
             child: Text(
               "Check in Activity",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                
+              ),
             ),
           ),
           
           Container(
-            height: 150,
+            height: 140,
             margin: const EdgeInsets.all(10),
             decoration: BoxDecoration(
-              color: Colors.grey,
+              color: Colors.white,
               borderRadius: BorderRadius.all(Radius.circular(10)),
             ),
             // child: ListView(
@@ -410,10 +434,11 @@ class _MyappState extends State {
                 return Padding(
                   padding: EdgeInsets.symmetric(vertical: 3),
                   child:  Container(
-                  height: 25,
+                  height: 35,
                   width: 85,
                   decoration: BoxDecoration(
-                    color: Colors.white60,
+                    color: Colors.grey,
+                    borderRadius: BorderRadius.all(Radius.circular(5))
                   ),
                   child: Row(
                     children: <Widget>[
