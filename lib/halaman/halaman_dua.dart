@@ -18,6 +18,15 @@ class _MyappState extends State {
   var foto;
   var name;
 
+    // FOTO AND NAME
+  Future <String> getData() async{
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    setState(() {
+      foto = pref.getString('photo');
+      name = pref.getString('full_name');
+    });
+  }
+
   //get location
   Location location = Location();
   double long;
@@ -44,10 +53,7 @@ class _MyappState extends State {
   // final LatLng _center = const LatLng(45.521563, -122.677433);
   LatLng _center = LatLng(-6.897980, 107.619328); // bandung
   
-  
-
   BitmapDescriptor myIcon;
-
   @override
   void initState() {
     getData();
@@ -62,20 +68,10 @@ class _MyappState extends State {
     getLocation();
     getTime();
 }
-
   void _onMapCreated(GoogleMapController controller) {
     mapController = controller;
   }
   
-  // FOTO AND NAME
-  Future <String> getData() async{
-    SharedPreferences pref = await SharedPreferences.getInstance();
-    setState(() {
-      foto = pref.getString('photo');
-      name = pref.getString('full_name');
-    });
-  }
-
   // Time
   var formattedDate = '';
   var formattedTime = '';
@@ -118,21 +114,15 @@ class _MyappState extends State {
           if(pr.isShowing())
             pr.hide();
             Alert(context: context, title: "WARNING", desc: "Anda telat").show();
-            FloatingActionButton(backgroundColor: Colors.yellow,);
         }
           print("PR status  ${pr.isShowing()}" );
           
       });
-    
-    
-      
-
   }
 
   @override
   Widget build(BuildContext context){
     pr = new ProgressDialog(context, type: ProgressDialogType.Normal);
-    
     return LayoutBuilder(
       builder: (context, constraints){
         return Scaffold(
@@ -141,7 +131,6 @@ class _MyappState extends State {
         children: <Widget>[
           Container(
             height:160,
-            
             decoration: BoxDecoration(
               color: Colors.deepOrange,
               borderRadius: BorderRadius.only(bottomLeft: Radius.circular(30), bottomRight:Radius.circular(30)),
@@ -221,6 +210,7 @@ class _MyappState extends State {
                   ),
                   onPressed:(){
                     _absen(context, pr);
+                    
                   },
                 ),
               ),

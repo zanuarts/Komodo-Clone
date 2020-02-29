@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:komodo_ui/authentication/authentication.dart';
 import 'package:komodo_ui/halaman/halaman_dua.dart';
-import 'package:komodo_ui/halaman/halaman_satu.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class DrawerApp extends StatefulWidget {

@@ -1,25 +1,110 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../home/drawer.dart';
-//import 'package:flutter_ui1/components/drawer.dart';
 
+class Halamantiga extends StatefulWidget {
+  @override
+  _MyappState createState() => _MyappState();
+}
 
-class Halamantiga extends StatelessWidget {
-@override
+class _MyappState extends State {
+  var foto;
+  var name;
+
+  Future <String> getData() async{
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    setState(() {
+      foto = pref.getString('photo');
+      name = pref.getString('full_name');
+    });
+  }
+
+  void initState(){
+    getData();
+  }
+
+  @override
   Widget build(BuildContext context){
     return Scaffold(
-      appBar: AppBar(
-        title: new Text("Project"),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(
-            bottom: Radius.circular(15),
-          ),
-
-        ),
-        // elevation: 0.0,
-      ),
       drawer: DrawerApp(),
-      body: Center(
-            child: Text("Coming soon! But not soon enough."),
+      body: Column(
+        children: <Widget>[
+          Container(
+            height:160,
+            decoration: BoxDecoration(
+              color: Colors.deepOrange,
+              borderRadius: BorderRadius.only(bottomLeft: Radius.circular(30), bottomRight:Radius.circular(30)),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.deepOrangeAccent,
+                  blurRadius: 20.0, // has the effect of softening the shadow
+                  spreadRadius: 1, // has the effect of extending the shadow
+                  offset: Offset(
+                    5.0, // horizontal, move right 10
+                    5.0, // vertical, move down 10
+                  ),
+                )
+              ],
+            ),
+            child: Column(
+              children: <Widget>[
+                // Project
+                Container(
+                  padding: EdgeInsets.all(10),
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    "Project",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 30,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+                // ROW UNTUK FOTO DAN NAMA
+                Row(
+                  children: <Widget>[
+                    //FOTO
+                    Container(
+                      padding: const EdgeInsets.only(left:35, bottom: 10, right: 10, top: 10),
+                      child:  CircleAvatar(
+                        radius: 40,
+                        child: ClipOval(
+                        child: Image.network(
+                          '$foto',
+                          width: 200,
+                          height: 200,
+                          fit: BoxFit.cover,
+                        ),
+                        )
+                      ),
+                    ),
+                    Container(
+                      padding: EdgeInsets.all(10),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text("Good Day", style: TextStyle(color: Colors.white),),
+                          Text('$name', style: TextStyle(color: Colors.white),),
+                        ]
+                      )
+                    ),
+                    
+                  ],
+                )
+              ],
+            ),
+          ),
+          Container(
+            alignment: Alignment.center,
+            child:Text(
+              "Coming soon!",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
