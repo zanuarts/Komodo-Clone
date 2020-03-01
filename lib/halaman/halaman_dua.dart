@@ -17,6 +17,34 @@ class _MyappState extends State {
   ProgressDialog pr;
   var foto;
   var name;
+  var waktu = '';
+
+  getSelamat() async{
+    getTime();
+      if (hourNow > 04.00){
+      setState((){
+        waktu = 'Good Morning';
+      });
+    }
+    else if(hourNow > 10.00){
+      setState((){
+        waktu = 'Good Morning';
+      });
+    }
+    else if(hourNow > 17.00){
+      setState((){
+        waktu = 'Good Morning';
+      });
+    }
+    else if(hourNow > 21.00){
+      setState((){
+        waktu = 'Good Morning';
+        print("test");
+      });
+    }
+    
+  }
+
 
     // FOTO AND NAME
   Future <String> getData() async{
@@ -57,6 +85,7 @@ class _MyappState extends State {
   @override
   void initState() {
     getData();
+    getSelamat();
     _markers.add(
       Marker(
         markerId: MarkerId("-6.897980, 107.619328"),
@@ -67,6 +96,8 @@ class _MyappState extends State {
     super.initState();
     getLocation();
     getTime();
+    
+    
 }
   void _onMapCreated(GoogleMapController controller) {
     mapController = controller;
@@ -184,7 +215,8 @@ class _MyappState extends State {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          Text("Good Day", style: TextStyle(color: Colors.white),),
+                          // _selamat(),
+                          Text('Good Morning', style: TextStyle(color: Colors.white),),
                           Text('$name', style: TextStyle(color: Colors.white),),
                         ]
                       )
