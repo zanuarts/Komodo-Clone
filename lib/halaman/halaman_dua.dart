@@ -19,31 +19,31 @@ class _MyappState extends State {
   var name;
   var waktu = '';
 
-  getSelamat() async{
-    getTime();
-      if (hourNow > 04.00){
-      setState((){
-        waktu = 'Good Morning';
-      });
-    }
-    else if(hourNow > 10.00){
-      setState((){
-        waktu = 'Good Morning';
-      });
-    }
-    else if(hourNow > 17.00){
-      setState((){
-        waktu = 'Good Morning';
-      });
-    }
-    else if(hourNow > 21.00){
-      setState((){
-        waktu = 'Good Morning';
-        print("test");
-      });
-    }
+  // getSelamat() {
+  //   getTime();
+  //     if (formattedTime > 04.00){
+  //     setState((){
+  //       waktu = 'Good Morning';
+  //     });
+  //   }
+  //   else if(formattedTime > 10.00){
+  //     setState((){
+  //       waktu = 'Good Afternoon';
+  //     });
+  //   }
+  //   else if(formattedTime > 17.00){
+  //     setState((){
+  //       waktu = 'Good Evening';
+  //     });
+  //   }
+  //   else if(formattedTime > 21.00){
+  //     setState((){
+  //       waktu = 'Good Night';
+  //       print("test");
+  //     });
+  //   }
     
-  }
+  // }
 
 
     // FOTO AND NAME
@@ -85,7 +85,7 @@ class _MyappState extends State {
   @override
   void initState() {
     getData();
-    getSelamat();
+    // getSelamat();
     _markers.add(
       Marker(
         markerId: MarkerId("-6.897980, 107.619328"),
@@ -107,7 +107,7 @@ class _MyappState extends State {
   var formattedDate = '';
   var formattedTime = '';
   double hourNow = 0.0;
-  getTime(){
+  getTime()async{
     DateTime now = DateTime.now();
     String dateNow = DateFormat.yMMMMEEEEd().format(now);
     String timeNow = DateFormat('kk.mm').format(now);
@@ -116,6 +116,27 @@ class _MyappState extends State {
       hourNow = timeNowDouble;
       formattedDate = dateNow;
       formattedTime = timeNow;
+      if (hourNow > 04.00){
+      setState((){
+        waktu = 'Good Morning';
+      });
+    }
+    else if(hourNow > 10.00){
+      setState((){
+        waktu = 'Good Afternoon';
+      });
+    }
+    else if(hourNow > 17.00){
+      setState((){
+        waktu = 'Good Evening';
+      });
+    }
+    else if(hourNow > 21.00){
+      setState((){
+        waktu = 'Good Night';
+        print("test");
+      });
+    }
     });
   }
 
@@ -216,7 +237,7 @@ class _MyappState extends State {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           // _selamat(),
-                          Text('Good Morning', style: TextStyle(color: Colors.white),),
+                          Text('$waktu', style: TextStyle(color: Colors.white),),
                           Text('$name', style: TextStyle(color: Colors.white),),
                         ]
                       )
@@ -451,7 +472,7 @@ class _MyappState extends State {
             //   ],
             // ),
             child: ListView.builder(
-              itemCount: 100,
+              itemCount: 1,
               itemBuilder: (BuildContext context, int index){
                 return Padding(
                   padding: EdgeInsets.symmetric(vertical: 3),
