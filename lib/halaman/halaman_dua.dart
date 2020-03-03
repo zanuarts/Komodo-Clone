@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:komodo_ui/home/drawer.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -18,6 +20,7 @@ class _MyappState extends State {
   var foto;
   var name;
   var waktu = '';
+
 
   // getSelamat() {
   //   getTime();
@@ -96,8 +99,9 @@ class _MyappState extends State {
     super.initState();
     getLocation();
     getTime();
-    
-    
+    _timeString = _formatDateTime(DateTime.now());
+    Timer.periodic(Duration(seconds: 1), (Timer t) => getTime());
+    super.initState();
 }
   void _onMapCreated(GoogleMapController controller) {
     mapController = controller;
@@ -106,13 +110,22 @@ class _MyappState extends State {
   // Time
   var formattedDate = '';
   var formattedTime = '';
+  String _timeString;
   double hourNow = 0.0;
-  getTime()async{
+  // double sekarang = 0.0;
+  String _formatDateTime(DateTime dateTime) {
+    return DateFormat('kk.mm').format(dateTime);
+  }
+  getTime(){
     DateTime now = DateTime.now();
     String dateNow = DateFormat.yMMMMEEEEd().format(now);
     String timeNow = DateFormat('kk.mm').format(now);
     double timeNowDouble = double.parse(timeNow);
+    // double tnow = double parse(_timeString);
+    final String formattedDateTime = _formatDateTime(now);
     setState(() {
+      _timeString = formattedDateTime;
+      // sekarang = tnow;
       hourNow = timeNowDouble;
       formattedDate = dateNow;
       formattedTime = timeNow;
@@ -293,7 +306,7 @@ class _MyappState extends State {
                         ),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 5),
-                          child:Text(formattedTime, style: TextStyle(color: Colors.black),),
+                          child:Text(_timeString, style: TextStyle(color: Colors.black),),
                         ),
                       ],
                     ),

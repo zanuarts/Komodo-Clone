@@ -76,7 +76,7 @@ class _DrawerAppState extends State<DrawerApp> {
                   ),
                   decoration: BoxDecoration(
                     color: Colors.transparent
-                  ),
+                  ), accountEmail: null,
                 ),
                 ListTile(
                   title: Text("Logout"),
