@@ -219,6 +219,7 @@ class _MyappState extends State {
                     //FOTO
                     Container(
                       padding: const EdgeInsets.only(left:35, bottom: 10, right: 10, top: 10),
+                      
                       child:  CircleAvatar(
                         radius: 40,
                         child: ClipOval(

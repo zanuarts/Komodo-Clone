@@ -64,6 +64,19 @@ class _LoginFormState extends State<LoginForm> {
             return null;
           }
         }
+        else if (state is LoginInitial){
+        
+          Fluttertoast.showToast(
+                          msg: "Sukses Login",
+                          toastLength: Toast.LENGTH_SHORT,
+                          gravity: ToastGravity.BOTTOM,
+                          timeInSecForIos: 1,
+                          backgroundColor: Colors.green,
+                          textColor: Colors.white,
+                          fontSize: 16.0
+                        );
+        
+        }
       },
       child: BlocBuilder<LoginBloc, LoginState>(
         builder: (context, state) {
@@ -176,6 +189,7 @@ class _LoginFormState extends State<LoginForm> {
                                           //   _validator();
                                           // }
                                           onPressed: state is! LoginLoading ? _onLoginButtonPressed : null,
+                                            
                                           // onPressed: state is! LoginLoading ? _onLoginButtonPressed : null,
                                         )
                                       ),
