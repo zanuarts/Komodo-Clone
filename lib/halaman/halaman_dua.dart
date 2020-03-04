@@ -164,8 +164,8 @@ class _MyappState extends State {
               boxShadow: [
                 BoxShadow(
                   color: Colors.deepOrangeAccent,
-                  blurRadius: 20.0, // has the effect of softening the shadow
-                  spreadRadius: 1, // has the effect of extending the shadow
+                  blurRadius: 10.0, // has the effect of softening the shadow
+                  spreadRadius: 0.25, // has the effect of extending the shadow
                   offset: Offset(
                     5.0, // horizontal, move right 10
                     5.0, // vertical, move down 10

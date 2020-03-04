@@ -23,6 +23,17 @@ class _MyappState extends State {
     getData();
   }
 
+  String greeting() {
+    var hour = DateTime.now().hour;
+    if (hour < 12) {
+      return 'Good Morning';
+    }
+    if (hour < 17) {
+      return 'Good Afternoon';
+    }
+    return 'Good Evening';
+  }
+
   @override
   Widget build(BuildContext context){
     return Scaffold(
@@ -37,8 +48,8 @@ class _MyappState extends State {
               boxShadow: [
                 BoxShadow(
                   color: Colors.deepOrangeAccent,
-                  blurRadius: 20.0, // has the effect of softening the shadow
-                  spreadRadius: 1, // has the effect of extending the shadow
+                  blurRadius: 10.0, // has the effect of softening the shadow
+                  spreadRadius: 0.25, // has the effect of extending the shadow
                   offset: Offset(
                     5.0, // horizontal, move right 10
                     5.0, // vertical, move down 10
@@ -84,7 +95,7 @@ class _MyappState extends State {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          Text("Good Day", style: TextStyle(color: Colors.white),),
+                          Text(greeting(), style: TextStyle(color: Colors.white),),
                           Text('$name', style: TextStyle(color: Colors.white),),
                         ]
                       )
@@ -97,10 +108,12 @@ class _MyappState extends State {
           ),
           Container(
             alignment: Alignment.center,
-            child:Text(
-              "Coming soon!",
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
+            child:Center(
+              child: Text(
+                "Coming soon!",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
           ),
