@@ -21,34 +21,6 @@ class _MyappState extends State {
   var name;
   var waktu = '';
 
-
-  // getSelamat() {
-  //   getTime();
-  //     if (formattedTime > 04.00){
-  //     setState((){
-  //       waktu = 'Good Morning';
-  //     });
-  //   }
-  //   else if(formattedTime > 10.00){
-  //     setState((){
-  //       waktu = 'Good Afternoon';
-  //     });
-  //   }
-  //   else if(formattedTime > 17.00){
-  //     setState((){
-  //       waktu = 'Good Evening';
-  //     });
-  //   }
-  //   else if(formattedTime > 21.00){
-  //     setState((){
-  //       waktu = 'Good Night';
-  //       print("test");
-  //     });
-  //   }
-    
-  // }
-
-
     // FOTO AND NAME
   Future <String> getData() async{
     SharedPreferences pref = await SharedPreferences.getInstance();
@@ -129,28 +101,18 @@ class _MyappState extends State {
       hourNow = timeNowDouble;
       formattedDate = dateNow;
       formattedTime = timeNow;
-      if (hourNow > 04.00){
-      setState((){
-        waktu = 'Good Morning';
-      });
-    }
-    else if(hourNow > 10.00){
-      setState((){
-        waktu = 'Good Afternoon';
-      });
-    }
-    else if(hourNow > 17.00){
-      setState((){
-        waktu = 'Good Evening';
-      });
-    }
-    else if(hourNow > 21.00){
-      setState((){
-        waktu = 'Good Night';
-        print("test");
-      });
-    }
     });
+  }
+
+  String greeting() {
+    var hour = DateTime.now().hour;
+    if (hour < 12) {
+      return 'Good Morning';
+    }
+    if (hour < 17) {
+      return 'Good Afternoon';
+    }
+    return 'Good Evening';
   }
 
   void _absen(context, pr) async{
@@ -251,7 +213,7 @@ class _MyappState extends State {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           // _selamat(),
-                          Text('$waktu', style: TextStyle(color: Colors.white),),
+                          Text(greeting(), style: TextStyle(color: Colors.white),),
                           Text('$name', style: TextStyle(color: Colors.white),),
                         ]
                       )
