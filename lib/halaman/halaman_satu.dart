@@ -100,8 +100,8 @@ class _MyappState extends State {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          Text(greeting(), style: TextStyle(color: Colors.white),),
-                          Text("$name", style: TextStyle(color: Colors.white),),
+                          Text(greeting(), style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold,),),
+                          Text("$name", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 24),),
                         ]
                       )
                     )

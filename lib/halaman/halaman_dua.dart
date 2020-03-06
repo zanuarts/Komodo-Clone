@@ -14,6 +14,7 @@ import 'package:location/location.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:komodo_ui/components/globalkey.dart';
 import 'dart:convert' as convert;
+import 'package:komodo_ui/components/attendance.dart';
 
 class Halamandua extends StatefulWidget {
   @override
@@ -250,13 +251,55 @@ class _MyappState extends State {
         }
         else if (hourNow <= 08.30){
           print("Normal");
+          await ioClient.post(url, body: {
+            "person_id": "$personid",
+            "latitude": "$lat",
+            "longitude": "$long"
+          }).then((response) async {
+            if (response.statusCode == 201) {
+              //Navigator.pushNamed(context, '/absensi');
+              Fluttertoast.showToast(
+                msg: "Anda Sukses Checkin",
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.BOTTOM,
+                timeInSecForIos: 1,
+                backgroundColor: Colors.green,
+                textColor: Colors.white,
+                fontSize: 16.0
+              );
+              var jsonResponse = convert.jsonDecode(response.body);
+              var status = jsonResponse['message'];
+              if (status == 'success') {}
+            }
           if(pr.isShowing())
             pr.hide();
+          }); 
         }
         else if (hourNow <= 09.00){
           print("Late");
+          await ioClient.post(url, body: {
+            "person_id": "$personid",
+            "latitude": "$lat",
+            "longitude": "$long"
+          }).then((response) async {
+            if (response.statusCode == 201) {
+              //Navigator.pushNamed(context, '/absensi');
+              Fluttertoast.showToast(
+                msg: "Anda Sukses Checkin",
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.BOTTOM,
+                timeInSecForIos: 1,
+                backgroundColor: Colors.green,
+                textColor: Colors.white,
+                fontSize: 16.0
+              );
+              var jsonResponse = convert.jsonDecode(response.body);
+              var status = jsonResponse['message'];
+              if (status == 'success') {}
+            }
           if(pr.isShowing())
             pr.hide();
+          }); 
             Alert(context: context, title: "WARNING", desc: "Anda telat").show();
         }
         else if (hourNow > 09.00){
@@ -284,9 +327,7 @@ class _MyappState extends State {
           if(pr.isShowing())
             pr.hide();
           }); 
-          if(pr.isShowing())
-            pr.hide();
-            Alert(context: context, title: "WARNING", desc: "Anda telat").show();
+          Alert(context: context, title: "WARNING", desc: "Anda telat").show();
         }
           print("PR status  ${pr.isShowing()}" );
           
@@ -647,7 +688,7 @@ class _MyappState extends State {
             //   ],
             // ),
             child: ListView.builder(
-              itemCount: 1,
+              itemCount: 100,
               itemBuilder: (BuildContext context, int index){
                 return Padding(
                   padding: EdgeInsets.symmetric(vertical: 3),
@@ -655,12 +696,13 @@ class _MyappState extends State {
                   height: 35,
                   width: 85,
                   decoration: BoxDecoration(
-                    color: Colors.grey,
+                    color: Colors.black26,
                     borderRadius: BorderRadius.all(Radius.circular(5))
                   ),
                   child: Row(
                     children: <Widget>[
                       Container(
+                        
                         margin: const EdgeInsets.all(5),
                         width: 80,  
                         alignment: Alignment.center,
@@ -676,6 +718,13 @@ class _MyappState extends State {
                       Text(
                         '$name checked in at $hourNow',
                       ),
+                      // Padding(
+                      //         padding: const EdgeInsets.all(8.0),
+                      //         child: ConstrainedBox(
+                      //           constraints: new BoxConstraints(minHeight: 0, maxHeight: 1900),
+                      //           child: Attendance(),
+                      //         ),
+                      //       ),
                     ],
                   ),
                 ));

@@ -240,6 +240,20 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.4.0"
+  pigment:
+    dependency: "direct main"
+    description:
+      name: pigment
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.3"
+  pk_skeleton:
+    dependency: "direct main"
+    description:
+      name: pk_skeleton
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.2"
   progress_dialog:
     dependency: "direct main"
     description:
