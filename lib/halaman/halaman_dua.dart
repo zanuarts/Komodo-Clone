@@ -1,6 +1,10 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:http/io_client.dart';
+import 'package:komodo_ui/components/helper.dart';
 import 'package:komodo_ui/home/drawer.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -8,7 +12,8 @@ import 'package:intl/intl.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:location/location.dart';
 import 'package:progress_dialog/progress_dialog.dart';
-
+import 'package:komodo_ui/components/globalkey.dart';
+import 'dart:convert' as convert;
 
 class Halamandua extends StatefulWidget {
   @override
@@ -115,15 +120,133 @@ class _MyappState extends State {
     return 'Good Evening';
   }
 
-  void _absen(context, pr) async{
+  final Helper helper = new Helper();
+  Future<Map> get sessionDataSource => helper.getSession();
+  var session = {};
+  var personid;
+  // var name = ' ';
+  var userid;
+  var username = '';
+  getSharedPreferences() async {
+    session = await sessionDataSource;
+    name = session['full_name'];
+    userid = session['userid'];
+    personid = session['person_id'];
+    setState(() {
+      session = session;
+      userid = userid;
+      personid = personid;
+      name = name;
+    });
+  }
+
+  //checkinn checkout
+  var cekin = '';
+  var cekout = '';
+  var reason;
+  Future<Map<String, dynamic>> getAbsence() async {
+    HttpClient httpClient = new HttpClient()
+      ..badCertificateCallback =
+      ((X509Certificate cert, String host, int port) => true);
+    IOClient ioClient = new IOClient(httpClient);
+
+    return await ioClient.post('$apiwebsite/status_checkin', body: {
+      "person_id": "$personid",
+    }).then((response) async {
+      if (response.statusCode == 201) {
+        var jsonResponse = convert.jsonDecode(response.body);
+        var status = jsonResponse['message'];
+        var data = jsonResponse['data'];
+        // print(data['CHECKIN_TIME'])
+        if (status == 'data found') {
+          var formatter = new DateFormat('HH:mm');
+          var checkInFormatData;
+          if (data['checkin_time'] != null) {
+            DateTime checkinHour =
+            DateTime.parse("0000-00-00 ${data['checkin_time']}");
+            checkInFormatData = formatter.format(checkinHour);
+          } else {
+            checkInFormatData = data['checkin_time'];
+          }
+
+          var checkOutFormatData;
+          if (data['checkout_time'] != null) {
+            DateTime checkoutHour =
+            DateTime.parse("0000-00-00 ${data['checkout_time']}");
+            checkOutFormatData = formatter.format(checkoutHour);
+          } else {
+            checkOutFormatData = data['checkout_time'];
+          }
+          cekin = checkInFormatData;
+          cekout = checkOutFormatData;
+          //cekin = data['checkin_time'];
+          //cekout = data['checkout_time'];
+
+        } else {
+          cekin = null;
+          cekout = null;
+        }
+
+        DateTime dateTimeNowData = DateTime.now();
+        String hourNowDataString = DateFormat('kk.mm').format(dateTimeNowData);
+        double hourNowDataDouble = double.parse(hourNowDataString);
+        //String hourNowFormat = DateFormat('HH:mm').format(dateTimeNowData);
+        DateTime dateTimeTommorow = DateTime(dateTimeNowData.year, dateTimeNowData.month, dateTimeNowData.day + 1);
+        String tommorowFormat = DateFormat('EEEE, MMMM d y').format(dateTimeTommorow);
+        String dateNowFormat = DateFormat('EEEE, MMMM d y').format(dateTimeNowData);
+
+        var dataAbsence = {
+          'cekin': cekin,
+          'cekout': cekout,
+          'jam':hourNowDataString,
+          'hourNow' : hourNowDataDouble,
+          'tommorow' : tommorowFormat,
+          'formattedDate' : dateNowFormat,
+        };
+        return dataAbsence;
+      }
+      return null;
+    });
+  }
+
+
+  _absen(context, pr) async{
     getTime();
     pr.show();
-    Future.delayed(Duration(seconds: 1)).then((onValue){
+    var url = "$apiwebsite/checkin";
+    HttpClient httpClient = new HttpClient()
+      ..badCertificateCallback =
+      ((X509Certificate cert, String host, int port) => true);
+    IOClient ioClient = new IOClient(httpClient);
+    
+    Future.delayed(Duration(seconds: 1)).then((onValue) async {
         print("PR status  ${pr.isShowing()}" );
+        
         if (hourNow <= 08.00){
           print("Excellent");
+          await ioClient.post(url, body: {
+            "person_id": "$personid",
+            "latitude": "$lat",
+            "longitude": "$long"
+          }).then((response) async {
+            if (response.statusCode == 201) {
+              //Navigator.pushNamed(context, '/absensi');
+              Fluttertoast.showToast(
+                msg: "Anda Sukses Checkin",
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.BOTTOM,
+                timeInSecForIos: 1,
+                backgroundColor: Colors.green,
+                textColor: Colors.white,
+                fontSize: 16.0
+              );
+              var jsonResponse = convert.jsonDecode(response.body);
+              var status = jsonResponse['message'];
+              if (status == 'success') {}
+            }
           if(pr.isShowing())
             pr.hide();
+          }); 
         }
         else if (hourNow <= 08.30){
           print("Normal");
@@ -138,6 +261,29 @@ class _MyappState extends State {
         }
         else if (hourNow > 09.00){
           print("Danger");
+          await ioClient.post(url, body: {
+            "person_id": "$personid",
+            "latitude": "$lat",
+            "longitude": "$long"
+          }).then((response) async {
+            if (response.statusCode == 201) {
+              //Navigator.pushNamed(context, '/absensi');
+              Fluttertoast.showToast(
+                msg: "Anda Sukses Checkin",
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.BOTTOM,
+                timeInSecForIos: 1,
+                backgroundColor: Colors.green,
+                textColor: Colors.white,
+                fontSize: 16.0
+              );
+              var jsonResponse = convert.jsonDecode(response.body);
+              var status = jsonResponse['message'];
+              if (status == 'success') {}
+            }
+          if(pr.isShowing())
+            pr.hide();
+          }); 
           if(pr.isShowing())
             pr.hide();
             Alert(context: context, title: "WARNING", desc: "Anda telat").show();
@@ -213,8 +359,21 @@ class _MyappState extends State {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           // _selamat(),
-                          Text(greeting(), style: TextStyle(color: Colors.white),),
-                          Text('$name', style: TextStyle(color: Colors.white),),
+                          Text(
+                            greeting(),
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          Text(
+                            '$name', 
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 24,
+                            ),
+                          ),
                         ]
                       )
                     )
@@ -230,7 +389,7 @@ class _MyappState extends State {
                 padding: const EdgeInsets.only(left: 10, top: 25, bottom: 15),
                 // child: Container(
                 child: FloatingActionButton(
-                  backgroundColor: Colors.blueGrey,
+                  backgroundColor: Colors.blueAccent,
                   elevation: 0.0,
                   child: Icon(
                     Icons.fingerprint,
@@ -239,7 +398,17 @@ class _MyappState extends State {
                   ),
                   onPressed:(){
                     _absen(context, pr);
-                    
+                    // if (dataCheckin['cekout'] != null){
+                    //   _alreadyCheckout(context, pr);
+                    // }
+                    // else{
+                    //   if (dataCheckin['cekin'] == null){
+                    //     _checkIn(context, pr);
+                    //   }
+                    //   else{
+                    //     _checkOut(context,pr);
+                    //   }
+                    // }
                   },
                 ),
               ),
@@ -256,7 +425,13 @@ class _MyappState extends State {
                         ),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 5),
-                          child:Text(formattedDate, style: TextStyle(color: Colors.black),),
+                          child:Text(
+                            formattedDate, 
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                         ),
                       ],
                     ),
@@ -272,6 +447,30 @@ class _MyappState extends State {
                         ),
                       ],
                     ),
+                    // FutureBuilder<Map<String, dynamic>>(
+                    //   future: getAbsence(),
+                    //     builder: (BuildContext context, snapshot) {
+                    //       if(snapshot.hasData){
+                    //         var dataCheckin = snapshot.data;
+                    //         if (dataCheckin['cekout'] != null){
+                    //           _iconBackgroundColor = Color.fromRGBO(136, 136, 136, 1); // abu abu
+                    //           if(tommorow != null) {
+                    //             info = 'You already checked out';
+                    //           }
+                    //         }
+                    //         else{
+                    //           if (dataCheckin['cekin'] == null){
+                    //             _iconBackgroundColor = Color.fromRGBO(0, 70, 137, 1); // biru
+                    //               info = 'Press the Button on the Left side to checkin';
+                    //           }
+                    //           else{
+                    //             _iconBackgroundColor = Color.fromRGBO(255, 203, 5, 1); // kuning
+                    //             info = 'You are checked in at ${dataCheckin['cekin']}';
+                    //           }
+                    //         }
+                    //         formattedDate = '${dataCheckin['formattedDate']}';
+                    //         jam = '${dataCheckin['jam']}';
+                    //       },
                     Text('Press the button to checkpoint', style: TextStyle(color: Colors.black),),
                   ],
                 ),
