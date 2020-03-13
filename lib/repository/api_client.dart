@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:komodo_ui/model/model.dart';
 class ApiFactory {
-  static const baseUrl = 'https://cbnusantara.id/api_komodo_dev/login';
+  static const baseUrl = 'https://cbnusantara.id/api_komodo/login';
   final http.Client httpClient;
   ApiFactory({
     @required this.httpClient,
