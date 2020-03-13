@@ -111,14 +111,30 @@ class _MyappState extends State {
             ),
           ),
           Container(
-            alignment: Alignment.center,
-            child:Center(
-              child: Text(
-                "Coming soon!",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
+            margin: EdgeInsets.only(right:20.0, left: 20.0, top: 30.0, bottom: 10.0),
+            height: 100,
+            decoration: BoxDecoration(
+              shape: BoxShape.rectangle,
+              borderRadius: BorderRadius.circular(10.0),
+              color: Colors.red,
+            ),
+          ),
+          Container(
+            margin: EdgeInsets.only(right:20.0, left: 20.0,  bottom: 10.0),
+            height: 100,
+            decoration: BoxDecoration(
+              shape: BoxShape.rectangle,
+              borderRadius: BorderRadius.circular(10.0),
+              color: Colors.red,
+            ),
+          ),
+          Container(
+            margin: EdgeInsets.only(right:20.0, left: 20.0,  bottom: 10.0),
+            height: 100,
+            decoration: BoxDecoration(
+              shape: BoxShape.rectangle,
+              borderRadius: BorderRadius.circular(10.0),
+              color: Colors.red,
             ),
           ),
         ],
