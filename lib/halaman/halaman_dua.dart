@@ -146,6 +146,7 @@ class _MyappState extends State {
   var cekout = '';
   var reason;
   Future<Map<String, dynamic>> getAbsence() async {
+    print("masuk api gais");
     HttpClient httpClient = new HttpClient()
       ..badCertificateCallback =
       ((X509Certificate cert, String host, int port) => true);
@@ -155,6 +156,7 @@ class _MyappState extends State {
       "person_id": "$personid",
     }).then((response) async {
       if (response.statusCode == 201) {
+        print("masuk api gais 2");
         var jsonResponse = convert.jsonDecode(response.body);
         var status = jsonResponse['message'];
         var data = jsonResponse['data'];
@@ -439,6 +441,7 @@ class _MyappState extends State {
                   ),
                   onPressed:(){
                     _absen(context, pr);
+                    getAbsence();
                     // if (dataCheckin['cekout'] != null){
                     //   _alreadyCheckout(context, pr);
                     // }
