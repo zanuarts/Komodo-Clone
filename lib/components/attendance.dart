@@ -1,10 +1,10 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
+// import 'package:http/http.dart' as http;
 import 'package:http/io_client.dart';
 import 'package:komodo_ui/components/globalkey.dart';
-// import 'package:komodo-bloc/components/globalkey.dart';
+import 'package:komodo_ui/components/globalkey.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'package:pk_skeleton/pk_skeleton.dart';
@@ -150,7 +150,7 @@ class Data {
 
   factory Data.fromJson(Map<String, dynamic> json) {
     return Data(
-        nama: json['nama'],
+        nama: json['full_nama'],
         label: (json['label'] != null) ? json['label'] : '',
         color: (json['color'] != null) ? json['color'] : '#fff',
         checkin: json['checkin_time']);

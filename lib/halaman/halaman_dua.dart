@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/io_client.dart';
-import 'package:komodo_ui/components/helper.dart';
+// import 'package:komodo_ui/components/helper.dart';
 import 'package:komodo_ui/home/drawer.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -25,6 +25,7 @@ class _MyappState extends State {
   ProgressDialog pr;
   var foto;
   var name;
+  var personid;
   var waktu = '';
 
     // FOTO AND NAME
@@ -33,6 +34,8 @@ class _MyappState extends State {
     setState(() {
       foto = pref.getString('photo');
       name = pref.getString('full_name');
+      personid = pref.getString('person_id');
+
     });
   }
 
@@ -121,25 +124,25 @@ class _MyappState extends State {
     return 'Good Evening';
   }
 
-  final Helper helper = new Helper();
-  Future<Map> get sessionDataSource => helper.getSession();
-  var session = {};
-  var personid;
-  // var name = ' ';
-  var userid;
-  var username = '';
-  getSharedPreferences() async {
-    session = await sessionDataSource;
-    name = session['full_name'];
-    userid = session['userid'];
-    personid = session['person_id'];
-    setState(() {
-      session = session;
-      userid = userid;
-      personid = personid;
-      name = name;
-    });
-  }
+  // final Helper helper = new Helper();
+  // Future<Map> get sessionDataSource => helper.getSession();
+  // var session = {};
+  // var personid;
+  // var nama = '';
+  // var userid;
+  // var username = '';
+  // getSharedPreferences() async {
+  //   session = await sessionDataSource;
+  //   nama = session['full_name'];
+  //   userid = session['userid'];
+  //   personid = session['person_id'];
+  //   setState(() {
+  //     session = session;
+  //     userid = userid;
+  //     personid = personid;
+  //     nama = nama;
+  //   });
+  // }
 
   //checkinn checkout
   var cekin = '';
@@ -147,7 +150,6 @@ class _MyappState extends State {
   var reason;
   bool absen = false;
   Future<Map<String, dynamic>> getAbsence() async {
-    print("masuk api gais");
     HttpClient httpClient = new HttpClient()
       ..badCertificateCallback =
       ((X509Certificate cert, String host, int port) => true);
@@ -680,7 +682,7 @@ class _MyappState extends State {
                     }
                     else{
                       _absen(context, pr);
-                      getAbsence();
+                      // getAbsence();
                     }
                     // if (dataCheckin['cekout'] != null){
                     //   _alreadyCheckout(context, pr);
