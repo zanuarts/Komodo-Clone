@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/io_client.dart';
-import 'package:komodo_ui/halaman/component/header.dart';
 // import 'package:komodo_ui/components/helper.dart';
 import 'package:komodo_ui/home/drawer.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -129,10 +128,298 @@ class _MyappState extends State {
   var cekout = '';
   var reason;
   bool absen = false;
+  
+  Future<Map<String, dynamic>> getAbsence() async {
+    HttpClient httpClient = new HttpClient()
+      ..badCertificateCallback =
+      ((X509Certificate cert, String host, int port) => true);
+    IOClient ioClient = new IOClient(httpClient);
+
+    return await ioClient.post('$apiwebsite/status_checkin', body: {
+      "person_id": "$personid",
+    }).then((response) async {
+      if (response.statusCode == 201) {
+        print("masuk api gais 2");
+        var jsonResponse = convert.jsonDecode(response.body);
+        var status = jsonResponse['message'];
+        var data = jsonResponse['data'];
+        // print(data['CHECKIN_TIME'])
+        if (status == 'data found') {
+          var formatter = new DateFormat('HH:mm');
+          var checkInFormatData;
+          if (data['checkin_time'] != null) {
+            DateTime checkinHour =
+            DateTime.parse("0000-00-00 ${data['checkin_time']}");
+            checkInFormatData = formatter.format(checkinHour);
+          } else {
+            checkInFormatData = data['checkin_time'];
+          }
+
+          var checkOutFormatData;
+          if (data['checkout_time'] != null) {
+            DateTime checkoutHour =
+            DateTime.parse("0000-00-00 ${data['checkout_time']}");
+            checkOutFormatData = formatter.format(checkoutHour);
+          } else {
+            checkOutFormatData = data['checkout_time'];
+          }
+          cekin = checkInFormatData;
+          cekout = checkOutFormatData;
+          //cekin = data['checkin_time'];
+          //cekout = data['checkout_time'];
+
+        } else {
+          cekin = null;
+          cekout = null;
+        }
+
+        DateTime dateTimeNowData = DateTime.now();
+        String hourNowDataString = DateFormat('kk.mm').format(dateTimeNowData);
+        double hourNowDataDouble = double.parse(hourNowDataString);
+        //String hourNowFormat = DateFormat('HH:mm').format(dateTimeNowData);
+        DateTime dateTimeTommorow = DateTime(dateTimeNowData.year, dateTimeNowData.month, dateTimeNowData.day + 1);
+        String tommorowFormat = DateFormat('EEEE, MMMM d y').format(dateTimeTommorow);
+        String dateNowFormat = DateFormat('EEEE, MMMM d y').format(dateTimeNowData);
+
+        var dataAbsence = {
+          'cekin': cekin,
+          'cekout': cekout,
+          'jam':hourNowDataString,
+          'hourNow' : hourNowDataDouble,
+          'tommorow' : tommorowFormat,
+          'formattedDate' : dateNowFormat,
+        };
+        return dataAbsence;
+      }
+      return null;
+    });
+  }
 
   Color _iconColor = Colors.white;
   Color _iconBackgroundColor = Colors.deepOrange;
   bool isLoading = false;
+
+  _alreadyCheckout(context, pr){
+    Fluttertoast.showToast(
+        msg:
+        "Anda Sudah absen Hari ini",
+        toastLength:
+        Toast.LENGTH_SHORT,
+        gravity:
+        ToastGravity.BOTTOM,
+        timeInSecForIos: 1,
+        backgroundColor:
+        Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0);
+  }
+
+  _checkOut(context, pr) async {
+    getTime();
+    if (hourNow < 17.00) {
+      _openAlertBoxpc(context, pr);
+    } else {
+      setState(() {
+        isLoading = true;
+        _iconColor = Colors.grey;
+      });
+
+      HttpClient httpClient = new HttpClient()
+        ..badCertificateCallback =
+        ((X509Certificate cert, String host, int port) => true);
+      IOClient ioClient = new IOClient(httpClient);
+      var url = "$apiwebsite/checkout";
+      await ioClient.post(url, body: {
+        "person_id": "$personid",
+        "latitude": "$lat",
+        "longitude": "$long"
+      }).then((response) async {
+        if (response.statusCode == 201) {
+          var jsonResponse = convert.jsonDecode(response.body);
+          var status = jsonResponse['status'];
+          if (status == 'success') {
+            Fluttertoast.showToast(
+                msg: "Anda Sukses Checkout",
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.BOTTOM,
+                timeInSecForIos: 1,
+                backgroundColor: Colors.green,
+                textColor: Colors.white,
+                fontSize: 16.0);
+            //Navigator.pushNamed(context, '/absensi');
+          } else {
+            Fluttertoast.showToast(
+                msg: "error system (API)",
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.BOTTOM,
+                timeInSecForIos: 1,
+                backgroundColor: Colors.red,
+                textColor: Colors.white,
+                fontSize: 16.0);
+          }
+        }
+        pr.hide();
+      });
+
+      setState(() {
+        isLoading = false;
+        _iconColor = Colors.white;
+      });
+    }
+  }
+
+  _openAlertBoxpc(context, pr) {
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(32.0))),
+            contentPadding: EdgeInsets.only(top: 10.0),
+            content: Container(
+              width: 300.0,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          Text(
+                            'Anda pulang cepat',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.red,
+                            ),
+                          )
+                        ],
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 5.0,
+                  ),
+                  Divider(
+                    color: Colors.grey,
+                    height: 4.0,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 30.0, right: 30.0),
+                    child: TextField(
+                      cursorColor: Colors.deepOrangeAccent,
+                      onChanged: (value) {
+                        setState(() {
+                          reason = value;
+                        });
+                      },
+                      decoration: InputDecoration(
+                        hintText: "Reason",
+                        border: InputBorder.none,
+                      ),
+                      maxLines: 8,
+                    ),
+                  ),
+                  InkWell(
+                    child: Container(
+                      padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
+                      decoration: BoxDecoration(
+                        color: Colors.red,
+                        borderRadius: BorderRadius.only(
+                            bottomLeft: Radius.circular(32.0),
+                            bottomRight: Radius.circular(32.0)),
+                      ),
+                      child: FlatButton(
+                        child: Text("Submit",
+                            style: TextStyle(color: Colors.white)),
+                        onPressed: () async {
+                          _checkOutEarly(context, pr);
+                        },
+                        // style: TextStyle(color: Colors.white),
+                        // textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        }).then((val) {
+      // ketika di dismiss dialog nya, reason nya di set null
+      //print(val);
+      setState(() {
+        reason = null;
+      });
+    });
+  }
+
+  _checkOutEarly(context, pr) async {
+    getTime();
+    if (reason == null) {
+      Fluttertoast.showToast(
+          msg: "cannot blank",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIos: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0);
+      return;
+    }
+
+    setState(() {
+      isLoading = true;
+      _iconColor = Colors.grey;
+    });
+
+    HttpClient httpClient = new HttpClient()
+      ..badCertificateCallback =
+      ((X509Certificate cert, String host, int port) => true);
+    IOClient ioClient = new IOClient(httpClient);
+    var url = "$apiwebsite/checkout";
+    await ioClient.post(url, body: {
+      "person_id": "$personid",
+      "latitude": "$lat",
+      "longitude": "$long",
+      "checkout_reason": "$reason"
+    }).then((response) async {
+      if (response.statusCode == 201) {
+        var jsonResponse = convert.jsonDecode(response.body);
+        var status = jsonResponse['status'];
+        if (status == 'success') {
+          Fluttertoast.showToast(
+              msg: "Anda sukses checkout",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIos: 1,
+              backgroundColor: Colors.green,
+              textColor: Colors.white,
+              fontSize: 16.0);
+          //Navigator.pushNamed(context, '/absensi');
+        } else {
+          Fluttertoast.showToast(
+              msg: "system error (APIsd)",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIos: 1,
+              backgroundColor: Colors.red,
+              textColor: Colors.white,
+              fontSize: 16.0);
+        }
+        pr.hide();
+        Navigator.of(context, rootNavigator: true).pop();
+      }
+    });
+
+    setState(() {
+      isLoading = false;
+      _iconColor = Colors.white;
+    });
+  }
 
   _absen(context, pr) async{
     getTime();
@@ -266,8 +553,6 @@ class _MyappState extends State {
     
   }
 
-
-//WIDGET BUILDER
   @override
   Widget build(BuildContext context){
     pr = new ProgressDialog(context, type: ProgressDialogType.Normal);
@@ -277,7 +562,87 @@ class _MyappState extends State {
       drawer: DrawerApp(),
       body: Column(
         children: <Widget>[
-          Header(),
+          Container(
+            height:160,
+            decoration: BoxDecoration(
+              color: Colors.deepOrange,
+              borderRadius: BorderRadius.only(bottomLeft: Radius.circular(30), bottomRight:Radius.circular(30)),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.deepOrangeAccent,
+                  blurRadius: 10.0, // has the effect of softening the shadow
+                  spreadRadius: 0.25, // has the effect of extending the shadow
+                  offset: Offset(
+                    5.0, // horizontal, move right 10
+                    5.0, // vertical, move down 10
+                  ),
+                )
+              ],
+            ),
+            child: Column(
+              children: <Widget>[
+                // ABSENCE
+                Container(
+                  padding: EdgeInsets.all(10),
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    "Absence",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 30,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+                // ROW UNTUK FOTO DAN NAMA
+                Row(
+                  children: <Widget>[
+                    //FOTO
+                    Container(
+                      padding: const EdgeInsets.only(left:35, bottom: 10, right: 10, top: 10),
+                      
+                      child:  CircleAvatar(
+                        radius: 40,
+                        child: ClipOval(
+                        child: Image.network(
+                          '$foto',
+                          width: 200,
+                          height: 200,
+                          fit: BoxFit.cover,
+                        ),
+                        )
+                      ),
+                    ),
+                    Container(
+                      padding: EdgeInsets.all(10),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          // _selamat(),
+                          Text(
+                            greeting(),
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          Text(
+                            '$name', 
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 24,
+                            ),
+                          ),
+                        ]
+                      )
+                    )
+                  ],
+                )
+              ],
+            ),
+            
+          ),
           Row(
             children: <Widget>[
               Padding(
@@ -293,7 +658,7 @@ class _MyappState extends State {
                   ),
                   onPressed:(){
                     if (absen == true){
-                      // _checkOut(context,pr);
+                      _checkOut(context,pr);
                     }
                     else{
                       _absen(context, pr);
