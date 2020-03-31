@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/io_client.dart';
+import 'package:komodo_ui/halaman/component/attend.dart';
 import 'package:komodo_ui/halaman/component/header.dart';
 // import 'package:komodo_ui/components/helper.dart';
 import 'package:komodo_ui/home/drawer.dart';
@@ -69,7 +70,6 @@ class _MyappState extends State {
   @override
   void initState() {
     getData();
-    // getSelamat();
     _markers.add(
       Marker(
         markerId: MarkerId("-6.897980, 107.619328"),
@@ -111,17 +111,6 @@ class _MyappState extends State {
       formattedDate = dateNow;
       formattedTime = timeNow;
     });
-  }
-
-  String greeting() {
-    var hour = DateTime.now().hour;
-    if (hour < 12) {
-      return 'Good Morning';
-    }
-    if (hour < 17) {
-      return 'Good Afternoon';
-    }
-    return 'Good Evening';
   }
 
   //checkinn checkout
@@ -278,82 +267,7 @@ class _MyappState extends State {
       body: Column(
         children: <Widget>[
           Header(),
-          Row(
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.only(left: 10, top: 25, bottom: 15),
-                // child: Container(
-                child: FloatingActionButton(
-                  backgroundColor: Colors.blueAccent,
-                  elevation: 0.0,
-                  child: Icon(
-                    Icons.fingerprint,
-                    size: 40,
-                    
-                  ),
-                  onPressed:(){
-                    if (absen == true){
-                      // _checkOut(context,pr);
-                    }
-                    else{
-                      _absen(context, pr);
-                      // getAbsence();
-                    }
-                    // if (dataCheckin['cekout'] != null){
-                    //   _alreadyCheckout(context, pr);
-                    // }
-                    // else{
-                    //   if (dataCheckin['cekin'] == null){
-                    //     _checkIn(context, pr);
-                    //   }
-                    //   else{
-                    //     _checkOut(context,pr);
-                    //   }
-                    // }
-                  },
-                ),
-              ),
-          Padding(
-                padding: const EdgeInsets.only(left: 10, top: 20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Row(
-                      children: <Widget>[
-                        Icon(
-                          Icons.calendar_today,
-                          size: 15,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 5),
-                          child:Text(
-                            formattedDate, 
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: <Widget>[
-                        Icon(
-                          Icons.timer,
-                          size: 15,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 5),
-                          child:Text(_timeString, style: TextStyle(color: Colors.black),),
-                        ),
-                      ],
-                    ),
-                    Text('Press the button to checkpoint', style: TextStyle(color: Colors.black),),
-                  ],
-                ),
-              )
-            ],
-          ),
+          Attend(),
           Container(
             padding: const EdgeInsets.only(top: 5, left: 10),
             alignment: Alignment.centerLeft,
