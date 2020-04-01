@@ -12,12 +12,15 @@ import 'package:location/location.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 
+ProgressDialog pr;
+
 class Attend extends StatefulWidget{
   _Attend createState() => _Attend();
 }
 
 class _Attend extends State{
-  ProgressDialog pr;
+  
+  // pr = new ProgressDialog(context);
   var personid;
   bool absen = false;
 
@@ -69,35 +72,89 @@ class _Attend extends State{
   }
 
   _absen(){
+    print("masuk fungsi absen");
     getTime();
     pr.show();
-    
-    if(hourNow < 08.00){
+
+    Future.delayed(Duration(seconds: 1)).then((onValue) async{
+      if(hourNow < 08.00){
       print('excellent');
-    }
-    else{
-      print('bad');
-    }
-  }
+      Fluttertoast.showToast(
+                msg: "Anda Sukses Checkin",
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.BOTTOM,
+                timeInSecForIos: 1,
+                backgroundColor: Colors.green,
+                textColor: Colors.white,
+                fontSize: 16.0
+              );
+        if(pr.isShowing())
+          pr.hide();
+      }
+      else if (hourNow <= 08.30){
+        Fluttertoast.showToast(
+          msg: "Anda Sukses Checkin",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIos: 1,
+          backgroundColor: Colors.green,
+          textColor: Colors.white,
+          fontSize: 16.0
+        );
+        if(pr.isShowing())
+          pr.hide();
+      }
+      else if (hourNow <= 09.00){
+        Fluttertoast.showToast(
+          msg: "Anda Sukses Checkin",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIos: 1,
+          backgroundColor: Colors.green,
+          textColor: Colors.white,
+          fontSize: 16.0
+        );
+        if(pr.isShowing())
+          pr.hide();
+      }
+      else{
+        print('bad');
+        Fluttertoast.showToast(
+          msg: "Anda Sukses Checkin",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIos: 1,
+          backgroundColor: Colors.green,
+          textColor: Colors.white,
+          fontSize: 16.0
+        );
+      }
+    if(pr.isShowing())
+      pr.hide();
+    });
+    
+  
+  // noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
+}
 
   @override
   Widget build(BuildContext context) {
+    pr = new ProgressDialog(context, type: ProgressDialogType.Normal);
     return Row(
             children: <Widget>[
               Padding(
                 padding: const EdgeInsets.only(left: 10, top: 25, bottom: 15),
-                child: FloatingActionButton(
-                  backgroundColor: Colors.blueAccent,
-                  elevation: 0.0,
-                  child: Icon(
-                    Icons.fingerprint,
-                    size: 40,
-                    
+                  child: FloatingActionButton(
+                    backgroundColor: Colors.blueAccent,
+                    elevation: 0.0,
+                    child: Icon(
+                      Icons.fingerprint,
+                      size: 40,
+                    ),
+                    onPressed: (){
+                      _absen();
+                    },
                   ),
-                  onPressed:(){
-                    _absen();
-                  },
-                ),
               ),
           Padding(
                 padding: const EdgeInsets.only(left: 10, top: 20),
