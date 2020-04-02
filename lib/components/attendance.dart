@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 // import 'package:http/http.dart' as http;
 import 'package:http/io_client.dart';
 import 'package:komodo_ui/components/globalkey.dart';
-import 'package:komodo_ui/components/globalkey.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'package:pk_skeleton/pk_skeleton.dart';

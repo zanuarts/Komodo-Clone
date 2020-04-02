@@ -113,150 +113,11 @@ class _MyappState extends State {
     });
   }
 
-  //checkinn checkout
-  var cekin = '';
-  var cekout = '';
-  var reason;
-  bool absen = false;
-
   Color _iconColor = Colors.white;
   Color _iconBackgroundColor = Colors.deepOrange;
   bool isLoading = false;
 
-  _absen(context, pr) async{
-    getTime();
-    pr.show();
-    var url = "$apiwebsite/checkin";
-    HttpClient httpClient = new HttpClient()
-      ..badCertificateCallback =
-      ((X509Certificate cert, String host, int port) => true);
-    IOClient ioClient = new IOClient(httpClient);
-    
-    Future.delayed(Duration(seconds: 1)).then((onValue) async {
-        print("PR status  ${pr.isShowing()}" );
-        
-        if (hourNow <= 08.00){
-          print("Excellent");
-          await ioClient.post(url, body: {
-            "person_id": "$personid",
-            "latitude": "$lat",
-            "longitude": "$long"
-          }).then((response) async {
-            if (response.statusCode == 201) {
-              //Navigator.pushNamed(context, '/absensi');
-              Fluttertoast.showToast(
-                msg: "Anda Sukses Checkin",
-                toastLength: Toast.LENGTH_SHORT,
-                gravity: ToastGravity.BOTTOM,
-                timeInSecForIos: 1,
-                backgroundColor: Colors.green,
-                textColor: Colors.white,
-                fontSize: 16.0
-              );
-              var jsonResponse = convert.jsonDecode(response.body);
-              var status = jsonResponse['message'];
-              if (status == 'success') {
-                absen = true;
-              }
-            }
-          if(pr.isShowing())
-            pr.hide();
-          }); 
-        }
-        else if (hourNow <= 08.30){
-          print("Normal");
-          await ioClient.post(url, body: {
-            "person_id": "$personid",
-            "latitude": "$lat",
-            "longitude": "$long"
-          }).then((response) async {
-            if (response.statusCode == 201) {
-              //Navigator.pushNamed(context, '/absensi');
-              Fluttertoast.showToast(
-                msg: "Anda Sukses Checkin",
-                toastLength: Toast.LENGTH_SHORT,
-                gravity: ToastGravity.BOTTOM,
-                timeInSecForIos: 1,
-                backgroundColor: Colors.green,
-                textColor: Colors.white,
-                fontSize: 16.0
-              );
-              var jsonResponse = convert.jsonDecode(response.body);
-              var status = jsonResponse['message'];
-              if (status == 'success') {
-                absen = true;
-              }
-            }
-          if(pr.isShowing())
-            pr.hide();
-          }); 
-        }
-        else if (hourNow <= 09.00){
-          print("Late");
-          await ioClient.post(url, body: {
-            "person_id": "$personid",
-            "latitude": "$lat",
-            "longitude": "$long"
-          }).then((response) async {
-            if (response.statusCode == 201) {
-              //Navigator.pushNamed(context, '/absensi');
-              Fluttertoast.showToast(
-                msg: "Anda Sukses Checkin",
-                toastLength: Toast.LENGTH_SHORT,
-                gravity: ToastGravity.BOTTOM,
-                timeInSecForIos: 1,
-                backgroundColor: Colors.green,
-                textColor: Colors.white,
-                fontSize: 16.0
-              );
-              var jsonResponse = convert.jsonDecode(response.body);
-              var status = jsonResponse['message'];
-              if (status == 'success') {
-                absen = true;
-              }
-            }
-          if(pr.isShowing())
-            pr.hide();
-          }); 
-            Alert(context: context, title: "WARNING", desc: "Anda telat").show();
-        }
-        else if (hourNow > 09.00){
-          print("Danger");
-          await ioClient.post(url, body: {
-            "person_id": "$personid",
-            "latitude": "$lat",
-            "longitude": "$long"
-          }).then((response) async {
-            if (response.statusCode == 201) {
-              //Navigator.pushNamed(context, '/absensi');
-              Fluttertoast.showToast(
-                msg: "Anda Sukses Checkin",
-                toastLength: Toast.LENGTH_SHORT,
-                gravity: ToastGravity.BOTTOM,
-                timeInSecForIos: 1,
-                backgroundColor: Colors.green,
-                textColor: Colors.white,
-                fontSize: 16.0
-              );
-              var jsonResponse = convert.jsonDecode(response.body);
-              var status = jsonResponse['message'];
-              if (status == 'success') {
-                absen = true;
-              }
-            }
-          if(pr.isShowing())
-            pr.hide();
-          }); 
-          Alert(context: context, title: "WARNING", desc: "Anda telat").show();
-        }
-          print("PR status  ${pr.isShowing()}" );
-          
-      });
-    
-  }
-
-
-//WIDGET BUILDER
+  //WIDGET BUILDER
   @override
   Widget build(BuildContext context){
     pr = new ProgressDialog(context, type: ProgressDialogType.Normal);
@@ -275,7 +136,6 @@ class _MyappState extends State {
               "Check in Location",
               style: TextStyle(
                 fontWeight: FontWeight.bold,
-                
               ),
             ),
           ),
@@ -293,14 +153,7 @@ class _MyappState extends State {
               zoom: 14.0,
               ),
               markers: _markers,
-              // markers: user_markers,
             ),
-            // child: Center(
-            //   child: Text(
-            //     "Maps",
-            //     style: TextStyle(color : Colors.white),
-            //   ),
-            // ),
           ),
           Container(
             padding: const EdgeInsets.only(left:10),
@@ -309,7 +162,6 @@ class _MyappState extends State {
               "Check in Activity",
               style: TextStyle(
                 fontWeight: FontWeight.bold,
-                
               ),
             ),
           ),

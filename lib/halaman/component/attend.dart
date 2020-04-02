@@ -1,16 +1,13 @@
 import 'dart:async';
-import 'dart:io';
-import 'dart:convert' as convert;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:http/io_client.dart';
 import 'package:intl/intl.dart';
 import 'package:komodo_ui/components/globalkey.dart';
 import 'package:location/location.dart';
 import 'package:progress_dialog/progress_dialog.dart';
-import 'package:rflutter_alert/rflutter_alert.dart';
+import 'package:http/http.dart' as http;
 
 ProgressDialog pr;
 
@@ -71,27 +68,35 @@ class _Attend extends State{
     });
   }
 
-  _absen(){
+  _absen(context, pr) async {
+    // var url = "$apiwebsite/checkin";
+    final http.Response response = await http.post(
+      '$apiwebsite/checkin'
+    );
     print("masuk fungsi absen");
     getTime();
     pr.show();
 
     Future.delayed(Duration(seconds: 1)).then((onValue) async{
       if(hourNow < 08.00){
-      print('excellent');
-      Fluttertoast.showToast(
-                msg: "Anda Sukses Checkin",
-                toastLength: Toast.LENGTH_SHORT,
-                gravity: ToastGravity.BOTTOM,
-                timeInSecForIos: 1,
-                backgroundColor: Colors.green,
-                textColor: Colors.white,
-                fontSize: 16.0
-              );
+        if (response.statusCode == 201){
+          print('excellent');
+          Fluttertoast.showToast(
+            msg: "Anda Sukses Checkin",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIos: 1,
+            backgroundColor: Colors.green,
+            textColor: Colors.white,
+            fontSize: 16.0
+          );
         if(pr.isShowing())
           pr.hide();
+        }
+      
       }
       else if (hourNow <= 08.30){
+        if (response.statusCode == 201){
         Fluttertoast.showToast(
           msg: "Anda Sukses Checkin",
           toastLength: Toast.LENGTH_SHORT,
@@ -103,8 +108,10 @@ class _Attend extends State{
         );
         if(pr.isShowing())
           pr.hide();
+        }
       }
       else if (hourNow <= 09.00){
+        if (response.statusCode == 201){
         Fluttertoast.showToast(
           msg: "Anda Sukses Checkin",
           toastLength: Toast.LENGTH_SHORT,
@@ -116,8 +123,10 @@ class _Attend extends State{
         );
         if(pr.isShowing())
           pr.hide();
+        }
       }
       else{
+        if (response.statusCode == 201){
         print('bad');
         Fluttertoast.showToast(
           msg: "Anda Sukses Checkin",
@@ -127,14 +136,13 @@ class _Attend extends State{
           backgroundColor: Colors.green,
           textColor: Colors.white,
           fontSize: 16.0
-        );
+          );
+        }
+        if(pr.isShowing())
+          pr.hide();
       }
-    if(pr.isShowing())
-      pr.hide();
-    });
-    
-  
-  // noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
+    }
+  );  
 }
 
   @override
@@ -152,7 +160,7 @@ class _Attend extends State{
                       size: 40,
                     ),
                     onPressed: (){
-                      _absen();
+                      _absen(context, pr);
                     },
                   ),
               ),
