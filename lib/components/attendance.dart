@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:http/io_client.dart';
 import 'package:komodo_ui/components/globalkey.dart';
 import 'dart:async';
+import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:pk_skeleton/pk_skeleton.dart';
 import 'package:pigment/pigment.dart';
@@ -13,7 +14,7 @@ class Attendance extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<Quote>(
-      future: getQuote(), //sets the getQuote method as the expected Future
+      future: getData(), //sets the getQuote method as the expected Future
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           List<Data> data = snapshot.data.data;
@@ -107,22 +108,36 @@ class Attendance extends StatelessWidget {
   }
 }
 
-Future<Quote> getQuote() async {
-  HttpClient httpClient = new HttpClient()
-    ..badCertificateCallback =
-    ((X509Certificate cert, String host, int port) => true);
-  IOClient ioClient = new IOClient(httpClient);
+// Future<Quote> getQuote() async {
+//   HttpClient httpClient = new HttpClient()
+//     ..badCertificateCallback =
+//     ((X509Certificate cert, String host, int port) => true);
+//   IOClient ioClient = new IOClient(httpClient);
 
-  String url = '$apiwebsite/getListAttendance';
-  final response =
-      await ioClient.post(url, headers: {"Accept": "application/json"});
+//   String url = '$apiwebsite/getListAttendance';
+//   final response =
+//       await ioClient.post(url, headers: {"Accept": "application/json"});
 
-  if (response.statusCode == 201) {
-    return Quote.fromJson(json.decode(response.body));
-  }else{
-    return null;
+//   if (response.statusCode == 201) {
+//     return Quote.fromJson(json.decode(response.body));
+//   }else{
+//     return null;
+//   }
+// }
+
+Future<Quote> getData() async{
+    final http.Response response = await http.post(
+      Uri.encodeFull("$apiwebsite/getListAttendance"),
+      headers: {
+        "Accept":"application/json"
+      }
+    );
+        if (response.statusCode == 201) {
+          return Quote.fromJson(json.decode(response.body));
+        }else{
+          return null;
+        }
   }
-}
 
 class Quote {
   final String author;

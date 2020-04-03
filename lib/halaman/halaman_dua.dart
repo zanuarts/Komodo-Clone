@@ -1,20 +1,10 @@
-import 'dart:async';
-import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:http/io_client.dart';
 import 'package:komodo_ui/halaman/component/attend.dart';
 import 'package:komodo_ui/halaman/component/header.dart';
-// import 'package:komodo_ui/components/helper.dart';
 import 'package:komodo_ui/home/drawer.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:intl/intl.dart';
-import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:location/location.dart';
 import 'package:progress_dialog/progress_dialog.dart';
-import 'package:komodo_ui/components/globalkey.dart';
-import 'dart:convert' as convert;
 import 'package:komodo_ui/components/attendance.dart';
 
 class Halamandua extends StatefulWidget {
@@ -24,21 +14,6 @@ class Halamandua extends StatefulWidget {
 
 class _MyappState extends State {
   ProgressDialog pr;
-  var foto;
-  var name;
-  var personid;
-  var waktu = '';
-
-    // FOTO AND NAME
-  Future <String> getData() async{
-    SharedPreferences pref = await SharedPreferences.getInstance();
-    setState(() {
-      foto = pref.getString('photo');
-      name = pref.getString('full_name');
-      personid = pref.getString('person_id');
-
-    });
-  }
 
   //get location
   Location location = Location();
@@ -79,9 +54,6 @@ class _MyappState extends State {
     );
     super.initState();
     getLocation();
-    getTime();
-    _timeString = _formatDateTime(DateTime.now());
-    Timer.periodic(Duration(seconds: 1), (Timer t) => getTime());
     super.initState();
 }
   void _onMapCreated(GoogleMapController controller) {
@@ -89,29 +61,7 @@ class _MyappState extends State {
   }
   
   // Time
-  var formattedDate = '';
-  var formattedTime = '';
-  String _timeString;
-  double hourNow = 0.0;
-  // double sekarang = 0.0;
-  String _formatDateTime(DateTime dateTime) {
-    return DateFormat('kk.mm').format(dateTime);
-  }
-  getTime(){
-    DateTime now = DateTime.now();
-    String dateNow = DateFormat.yMMMMEEEEd().format(now);
-    String timeNow = DateFormat('kk.mm').format(now);
-    double timeNowDouble = double.parse(timeNow);
-    // double tnow = double parse(_timeString);
-    final String formattedDateTime = _formatDateTime(now);
-    setState(() {
-      _timeString = formattedDateTime;
-      // sekarang = tnow;
-      hourNow = timeNowDouble;
-      formattedDate = dateNow;
-      formattedTime = timeNow;
-    });
-  }
+  
 
   Color _iconColor = Colors.white;
   Color _iconBackgroundColor = Colors.deepOrange;
