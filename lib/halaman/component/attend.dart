@@ -1,8 +1,10 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:http/io_client.dart';
 import 'package:intl/intl.dart';
 import 'package:komodo_ui/components/globalkey.dart';
 import 'package:komodo_ui/components/helper.dart';
@@ -18,26 +20,8 @@ class Attend extends StatefulWidget{
 }
 
 class _Attend extends State{
-  
-  // pr = new ProgressDialog(context);
-  // var personid;
-
-  // Future<String> getData() async{
-  //   SharedPreferences pref = await SharedPreferences.getInstance();
-  //   setState(() {
-  //     personid = pref.getString('person_id');
-  //   });
-  // }
 
   bool absen = false;
-
-  @override
-  void initState(){
-    // getData();
-    getTime();
-    _timeString = _formatDateTime(DateTime.now());
-    Timer.periodic(Duration(seconds: 1), (Timer t) => getTime());
-  }
 
   var formattedDate = '';
   var formattedTime = '';
@@ -83,7 +67,7 @@ class _Attend extends State{
   Future<Map> get sessionDataSource => helper.getSession();
   var session = {};
   var personid;
-  var name = '';
+  var name = ' ';
   var userid;
   var username = '';
   getSharedPreferences() async {
@@ -101,13 +85,19 @@ class _Attend extends State{
 
   var cekin = '';
   var cekout = '';
+  var reason;
   Future<Map<String, dynamic>> getAbsence() async {
-    final http.Response response = await http.post(
-      '$apiwebsite/status_checkin', 
-      body: {
-        "person_id": "$personid",
-      }).then(
-        (response) async {
+    HttpClient httpClient = new HttpClient()
+      ..badCertificateCallback =
+      ((X509Certificate cert, String host, int port) => true);
+    IOClient ioClient = new IOClient(httpClient);
+    return await ioClient.post('$apiwebsite/status_checkin', body: {
+      "person_id": "$personid",
+    // final http.Response response = await http.post(
+    //   '$apiwebsite/status_checkin', 
+    //   body: {
+    //     "person_id": "$personid",
+      }).then((response) async {
       if (response.statusCode == 201) {
         print("masuk api gais 2");
         var jsonResponse = convert.jsonDecode(response.body);
@@ -159,7 +149,7 @@ class _Attend extends State{
           'tommorow' : tommorowFormat,
           'formattedDate' : dateNowFormat,
         };
-        // return dataAbsence;
+        return dataAbsence;
       }
       return null;
     });
@@ -173,10 +163,10 @@ class _Attend extends State{
         "person_id": "$personid",
       }
     );
-    print("masuk fungsi absen");
+    if(response==201){
+      print("masuk fungsi absen");
     getTime();
     pr.show();
-
     Future.delayed(Duration(seconds: 1)).then((onValue) async{
       
       if(hourNow < 08.00){
@@ -242,9 +232,194 @@ class _Attend extends State{
         if(pr.isShowing())
           pr.hide();
       }
+      }
+      );
     }
-  );  
-}
+    else{
+      print("failed absen");
+    }
+  }
+
+  Color _iconColor = Colors.white;
+  Color _iconBackgroundColor = Colors.deepOrange;
+  bool isLoading = false;
+  ProgressDialog pr;
+
+  void initState() {
+    super.initState();
+    getSharedPreferences();
+    getTime();
+    getLocation();
+  }
+
+
+  _alreadyCheckout(context, pr){
+    Fluttertoast.showToast(
+        msg:
+        "Anda Sudah absen Hari ini",
+        toastLength:
+        Toast.LENGTH_SHORT,
+        gravity:
+        ToastGravity.BOTTOM,
+        timeInSecForIos: 1,
+        backgroundColor:
+        Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0);
+  }
+
+  _openAlertBoxtelat(context, pr) {
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(32.0))),
+            contentPadding: EdgeInsets.only(top: 10.0),
+            content: Container(
+              width: 300.0,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          Text(
+                            'Anda Telat',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.red,
+                            ),
+                          )
+                        ],
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 5.0,
+                  ),
+                  Divider(
+                    color: Colors.grey,
+                    height: 4.0,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 30.0, right: 30.0),
+                    child: TextField(
+                      cursorColor: Colors.deepOrangeAccent,
+                      onChanged: (value) {
+                        setState(() {
+                          reason = value;
+                        });
+                      },
+                      decoration: InputDecoration(
+                        hintText: "Reason",
+                        border: InputBorder.none,
+                      ),
+                      maxLines: 8,
+                    ),
+                  ),
+                  InkWell(
+                    child: Container(
+                      padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
+                      decoration: BoxDecoration(
+                        color: Colors.red,
+                        borderRadius: BorderRadius.only(
+                            bottomLeft: Radius.circular(32.0),
+                            bottomRight: Radius.circular(32.0)),
+                      ),
+                      child: FlatButton(
+                        child: Text("Submit",
+                            style: TextStyle(color: Colors.white)),
+                        onPressed: () {
+                          _checkInTelat(context, pr);
+                        },
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        }).then((val) {
+      // ketika di dismiss dialog nya, reason nya di set null
+      //print(val);
+      setState(() {
+        reason = null;
+      });
+    });
+  }
+
+  _checkInTelat(context, pr) async {
+    getTime();
+    if (reason == null) {
+      Fluttertoast.showToast(
+          msg: "cannot blank",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIos: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0);
+      return;
+    }
+    setState(() {
+      isLoading = true;
+      _iconColor = Colors.grey;
+    });
+    pr.show();
+    HttpClient httpClient = new HttpClient()
+      ..badCertificateCallback =
+      ((X509Certificate cert, String host, int port) => true);
+    IOClient ioClient = new IOClient(httpClient);
+
+    var url = "$apiwebsite/checkin";
+    await ioClient.post(url, body: {
+      "person_id": "$personid",
+      "latitude": "$lat",
+      "longitude": "$long",
+      "late_reason": "$reason"
+    }).then((response) async {
+      if (response.statusCode == 201) {
+        var jsonResponse = convert.jsonDecode(response.body);
+        var status = jsonResponse['status'];
+        if (status == 'success') {
+          Fluttertoast.showToast(
+              msg: "Anda Sukses Checkin",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIos: 1,
+              backgroundColor: Colors.green,
+              textColor: Colors.white,
+              fontSize: 16.0);
+          //Navigator.pushNamed(context, '/absensi');
+        } else {
+          Fluttertoast.showToast(
+              msg: "system error (API)",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIos: 1,
+              backgroundColor: Colors.red,
+              textColor: Colors.white,
+              fontSize: 16.0);
+        }
+        pr.hide();
+        Navigator.of(context, rootNavigator: true).pop();
+      }
+    });
+
+    setState(() {
+      isLoading = false;
+      _iconColor = Colors.white;
+    });
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
