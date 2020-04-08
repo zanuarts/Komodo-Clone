@@ -145,61 +145,6 @@ class Helper {
     return applicationId;
   }
 
-//  static Future apiCheckSession(authKey) async {
-//    var applicationToken = Helper.getApplicationToken();
-//    var url = Helper.baseUrlApi() + "?r=api/default/check-session";
-//    var response = await http.get(url, headers: {
-//      //"Content-Type": "application/json",
-//      "app_mobile_token": applicationToken,
-//      "user_mobile_token": authKey,
-//    });
-//    try {
-//      return json.decode(response.body);
-//    } catch (e) {
-//      print('error caught: $e');
-//      return {
-//        'status': false,
-//        'message': e,
-//        'code': 500,
-//        'data': {'message': 'system error'},
-//      };
-//    }
-//  }
-//
-//  static Future actionCheckSession(authKey) async {
-//    var data = await apiCheckSession(authKey).timeout(Duration(seconds: 30),
-//        onTimeout: () {
-//      print('30 seconds timed out');
-//    }).catchError(print);
-//    return data;
-//  }
-//
-//  Future<Map<String, dynamic>> checkSession() async {
-//    var authKey = await _getMobileToken();
-//    var status = false;
-//    if (authKey != '') {
-//      await Helper.actionCheckSession(authKey).then((data) {
-//        if (data != null) {
-//          if (data['status'] == true) {
-//            status = true;
-//          } else {
-//            status = false;
-//          }
-//        } else {
-//          status = false;
-//        }
-//      });
-//    } else {
-//      status = false;
-//    }
-//
-//    var session = {
-//      'status': status,
-//      'auth_key': authKey,
-//    };
-//    return session;
-//  }
-
   Future<Map<String, dynamic>> checkSession() async {
     var authKey = await _getMobileAuthKey();
     var status = false;
