@@ -44,7 +44,7 @@ class _MyappState extends State {
   BitmapDescriptor myIcon;
   @override
   void initState() {
-    getData();
+//    getData();
     _markers.add(
       Marker(
         markerId: MarkerId("-6.897980, 107.619328"),

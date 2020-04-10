@@ -10,10 +10,31 @@ import 'package:pk_skeleton/pk_skeleton.dart';
 import 'package:pigment/pigment.dart';
 
 class Attendance extends StatelessWidget {
+
+  List data;
+
+  Future<String> getData() async{
+    http.Response response = await http.get(
+        Uri.encodeFull("$apiwebsite/getListAttendance"),
+        headers: {
+          "Accept":"application/json"
+        }
+    );
+    setState((){
+      data = json.decode(response.body);
+    });
+    return "Success!";
+  }
+
+  @override
+  void initState(){
+    this.getData();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<Quote>(
-      future: getQuote(), //sets the getQuote method as the expected Future
+    return FutureBuilder<String>(
+      future: getData(), //sets the getQuote method as the expected Future
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           List<Data> data = snapshot.data.data;
@@ -22,7 +43,6 @@ class Attendance extends StatelessWidget {
               physics: ClampingScrollPhysics(),
               itemCount: data.length,
               itemBuilder: (BuildContext context, int index) {
-                // int rifdis = int.tryparse(rifdi);
                 return Container(
                     margin: EdgeInsets.only(left: 14, right: 14, bottom: 10),
                     padding:
@@ -34,7 +54,6 @@ class Attendance extends StatelessWidget {
                         BoxShadow(
                           color: Colors.black12,
                           offset: Offset(1.0, 1.0),
-//                          blurRadius: 1.0,
                         ),
                       ],
                     ),

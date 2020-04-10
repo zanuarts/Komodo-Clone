@@ -8,7 +8,7 @@ import 'package:komodo_ui/model/model.dart';
 class ApiRepository {
   final ApiFactory apiFactory;
   ApiRepository({@required this.apiFactory}):assert(apiFactory != null);
-  Future<PersonalUpd> getProfile(String id) async {
+  Future<PersonalNew> getProfile(String id) async {
     return apiFactory.getPersonal(id);
   }
 }

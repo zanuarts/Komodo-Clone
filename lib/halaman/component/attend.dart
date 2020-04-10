@@ -747,119 +747,93 @@ class _Attend extends State<Attend>{
               info = 'You are checked in at ${dataCheckin['cekin']}';
             }
           }
-        formattedDate = '${dataCheckin['formattedDate']}';
-        jam = '${dataCheckin['jam']}';
-    return Row(
-      children: <Widget>[
-        // Container(
-        //                                       height: MediaQuery.of(context).size.height/10.0,
-        //                                       width: MediaQuery.of(context).size.longestSide/10.0,
-        //                                       decoration: BoxDecoration(
-        //                                         color: _iconBackgroundColor,
-        //                                         borderRadius: BorderRadius.circular(100.0),
-        //                                       ),
-        //                                       child: new IconButton(
-        //                                         icon: new Icon(
-        //                                           Icons.fingerprint,
-        //                                           size: 50.0,
-        //                                           color: _iconColor,
-        //                                         ),
-        //                                         onPressed: (){
-        //                                           if (dataCheckin['cekout'] != null){
-        //                                             _alreadyCheckout(context, pr);
-        //                                           }else{
-        //                                             if (dataCheckin['cekin'] == null){
-        //                                               _checkIn(context, pr);
-        //                                             }else{
-        //                                               _checkOut(context,pr);
-        //                                             }
-        //                                           }
-        //                                         },
-        //                                       ),
-        //                                     ),
-        Padding(
-          padding: const EdgeInsets.only(left: 10, top: 25, bottom: 15),
-          child: FloatingActionButton(
-          backgroundColor: Colors.blueAccent,
-          elevation: 0.0,
-          child: Icon(
-            Icons.fingerprint,
-            size: 40,
-          ),
-          onPressed: (){
-            // _absen(context, pr);
-            if (dataCheckin['cekout'] != null){
-              _alreadyCheckout(context, pr);
-            }
-            else{
-              if (dataCheckin['cekin'] == null){
-                _checkIn(context, pr);
-              }
-              else{
-                _checkOut(context,pr);
-              }
-            }
-          },
-        ),
-      ),
-      Padding(
-        padding: const EdgeInsets.only(left: 10, top: 20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Row(
-              children: <Widget>[
-                Icon(
-                  Icons.calendar_today,
-                  size: 15,
+          formattedDate = '${dataCheckin['formattedDate']}';
+          jam = '${dataCheckin['jam']}';
+          return Row(
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.only(left: 10, top: 25, bottom: 15),
+                child: FloatingActionButton(
+                backgroundColor: Colors.blueAccent,
+                elevation: 0.0,
+                child: Icon(
+                  Icons.fingerprint,
+                  size: 40,
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 5),
-                  child:Text(
-                    formattedDate,
-                    // 'test',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ],
+                onPressed: (){
+                  // _absen(context, pr);
+                  if (dataCheckin['cekout'] != null){
+                    _alreadyCheckout(context, pr);
+                  }
+                  else{
+                    if (dataCheckin['cekin'] == null){
+                      _checkIn(context, pr);
+                    }
+                    else{
+                      _checkOut(context,pr);
+                    }
+                  }
+                },
+              ),
             ),
-            Row(
-              children: <Widget>[
-                Icon(
-                  Icons.timer,
-                  size: 15,
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 5),
-                  child:Text(
-                    _timeString,
-                    // 'test',
-                    style: TextStyle(color: Colors.black),
-                    ),
+            Padding(
+              padding: const EdgeInsets.only(left: 10, top: 20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Row(
+                    children: <Widget>[
+                      Icon(
+                        Icons.calendar_today,
+                        size: 15,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 5),
+                        child:Text(
+                          formattedDate,
+                          // 'test',
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
-              Text(info,
-                style: TextStyle(
-                  color: Colors.black
+                  Row(
+                    children: <Widget>[
+                      Icon(
+                        Icons.timer,
+                        size: 15,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 5),
+                        child:Text(
+                          _timeString,
+                          // 'test',
+                          style: TextStyle(color: Colors.black),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Text(info,
+                      style: TextStyle(
+                        color: Colors.black
+                      ),
+                    ),
+                  ],
                 ),
-              ),
+              )
             ],
-          ),
-        )
-      ],
-    );
-    }
-    else{
-      return Shimmer.fromColors(
-        baseColor: Colors.grey[300],
-        highlightColor: Colors.white,
-        child: ListItemLoader());
+          );
+        }
+      else{
+        return Shimmer.fromColors(
+          baseColor: Colors.grey[300],
+          highlightColor: Colors.white,
+          child: ListItemLoader());
+        }
       }
-    }
     );
   }
 }
