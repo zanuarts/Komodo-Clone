@@ -12,7 +12,8 @@ class UserRepository {
     @required String password,
 })async {
     var rt = '';
-    var url = "https://cbnusantara.id/api_komodo_dev/login";
+    // var url = "https://cbnusantara.id/api_komodo_dev/login";
+    var url = "https://ojanhtp.000webhostapp.com/auth/login";
     await http.post(url, body: {
       "username": username,
       "password": password
@@ -24,21 +25,32 @@ class UserRepository {
       } else {
 //        rt = "bearer ${mess['auth']['jwt']['token']}";
 //        await storage.write(key: 'bearer', value: mess['auth']['jwt']['token']);
-      var id = mess['auth']['id'];
-      var username = mess['auth']['username'];
+      // var id = mess['auth']['id'];
+      // var username = mess['auth']['username'];
+      // var token = mess['auth']['token'];
+      // var full_name = mess['auth']['full_name'];
+      // var role_name = mess['auth']['role_name'];
+      // var photo = mess['auth']['photo'];
+
+      var idUser = mess['result']['data']['id_user'];
+      var username = mess['result']['data']['username'];
       var token = mess['auth']['token'];
-      var full_name = mess['auth']['full_name'];
-      var role_name = mess['auth']['role_name'];
-      var photo = mess['auth']['photo'];
+      var email = mess['result']['data']['email'];
+      var role = mess['result']['data']['role'];
+      var createdBy = mess['result']['data']['created_by'];
+      var createdDate = mess['result']['data']['created_date'];
+      // var status = mess['result']['data']['status'];
 
       SharedPreferences pref = await SharedPreferences.getInstance();
+      pref.setString('id_user', idUser);
       pref.setString('username', username);
       pref.setString('token', token);
-      pref.setString('full_name', full_name);
-      pref.setString('role_name', role_name);
-      pref.setString('photo', photo);
+      pref.setString('email', email);
+      pref.setString('role', role);
+      pref.setString('created_by', createdBy);
+      pref.setString('created_date', createdDate);
+      // pref.setString('status', status);
       }
-
     });
     return rt;
     // await Future.delayed(Duration(seconds: 1));
@@ -62,12 +74,6 @@ class UserRepository {
   }
 
   Future<bool> hasToken() async{
-    // String value = await storage.read(key: 'bearer');
-    // if (value != ''){
-    //   return true;
-    // } else {
-    //   return false;
-    // }
     await Future.delayed(Duration(seconds:1));
     return false;
   }
