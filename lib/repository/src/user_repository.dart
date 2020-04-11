@@ -12,7 +12,6 @@ class UserRepository {
     @required String password,
 })async {
     var rt = '';
-    // var url = "https://cbnusantara.id/api_komodo_dev/login";
     var url = "https://ojanhtp.000webhostapp.com/auth/login";
     await http.post(url, body: {
       "username": username,
@@ -23,14 +22,6 @@ class UserRepository {
         rt = mess['status'];
 
       } else {
-//        rt = "bearer ${mess['auth']['jwt']['token']}";
-//        await storage.write(key: 'bearer', value: mess['auth']['jwt']['token']);
-      // var id = mess['auth']['id'];
-      // var username = mess['auth']['username'];
-      // var token = mess['auth']['token'];
-      // var full_name = mess['auth']['full_name'];
-      // var role_name = mess['auth']['role_name'];
-      // var photo = mess['auth']['photo'];
 
       var idUser = mess['result']['data']['id_user'];
       var username = mess['result']['data']['username'];
@@ -53,13 +44,7 @@ class UserRepository {
       }
     });
     return rt;
-    // await Future.delayed(Duration(seconds: 1));
-    // return 'token';
   }
-  // async {
-  //   await Future.delayed(Duration(seconds: 1));
-  //   return 'token';
-  // }
 
   Future<void> deleteToken()async {
     //await storage.deleteAll();
