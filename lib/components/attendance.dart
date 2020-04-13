@@ -19,7 +19,9 @@ class ListAtt extends State{
       }
     );
     setState((){
-      data = json.decode(response.body);
+      
+      var content = json.decode(response.body);
+      data = content["data"]["hasil"];
     });
     return "Success!";
   }
@@ -27,6 +29,7 @@ class ListAtt extends State{
   @override
   void initState(){
     this.getData();
+    print("masuk api");
   }
 
   @override
@@ -36,7 +39,8 @@ class ListAtt extends State{
         itemCount: data == null ? 0 : data.length,
         itemBuilder: (BuildContext context, int index){
           return new Card(
-            child: new Text(data[index]["hasil"]["checkin_time"]),
+            child: new Text(data[index]["id_absensi"]),
+            
           );
         },
       ),

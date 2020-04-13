@@ -11,14 +11,14 @@ class Halamansatu extends StatefulWidget {
 
 class _MyappState extends State {
   var foto;
-  var name;
+  var username;
 
     // FOTO AND NAME
   Future <String> getData() async{
     SharedPreferences pref = await SharedPreferences.getInstance();
     setState(() {
       foto = pref.getString("photo");
-      name = pref.getString('full_name');
+      username = pref.getString('username');
     });
   }
 
@@ -101,7 +101,7 @@ class _MyappState extends State {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Text(greeting(), style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold,),),
-                          Text("$name", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 24),),
+                          Text("$username", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 24),),
                         ]
                       )
                     )
@@ -111,30 +111,8 @@ class _MyappState extends State {
             ),
           ),
           Container(
-            margin: EdgeInsets.only(right:20.0, left: 20.0, top: 30.0, bottom: 10.0),
-            height: 100,
-            decoration: BoxDecoration(
-              shape: BoxShape.rectangle,
-              borderRadius: BorderRadius.circular(10.0),
-              color: Colors.red,
-            ),
-          ),
-          Container(
-            margin: EdgeInsets.only(right:20.0, left: 20.0,  bottom: 10.0),
-            height: 100,
-            decoration: BoxDecoration(
-              shape: BoxShape.rectangle,
-              borderRadius: BorderRadius.circular(10.0),
-              color: Colors.red,
-            ),
-          ),
-          Container(
-            margin: EdgeInsets.only(right:20.0, left: 20.0,  bottom: 10.0),
-            height: 100,
-            decoration: BoxDecoration(
-              shape: BoxShape.rectangle,
-              borderRadius: BorderRadius.circular(10.0),
-              color: Colors.red,
+            child: Text(
+              "Coming Soon!"
             ),
           ),
         ],
