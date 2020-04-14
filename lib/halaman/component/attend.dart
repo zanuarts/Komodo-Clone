@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:http/http.dart' as http;
 import 'dart:io';
-import 'dart:convert' as convert;
+import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -12,6 +12,7 @@ import 'package:komodo_ui/components/globalkey.dart';
 import 'package:location/location.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Attend extends StatefulWidget{
   _Attend createState() => _Attend();
@@ -20,11 +21,23 @@ class Attend extends StatefulWidget{
 class _Attend extends State{
   ProgressDialog pr;
   var personid;
+  String id_karyawan = '';
+  String id_user = '';
+  String late_reason = 'test';
   // bool absen = false;
+
+  Future<String> getData() async{
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    setState(() {
+      id_user = pref.getString('id_user');
+    });
+  }
 
   @override
   void initState(){
+    getData();
     getTime();
+    getKaryawan();
     _timeString = _formatDateTime(DateTime.now());
     Timer.periodic(Duration(seconds: 1), (Timer t) => getTime());
   }
@@ -67,102 +80,122 @@ class _Attend extends State{
         _userPostion = LatLng(lat, long);
         print("Lokasi di : ");
         print(_userPostion);
+        print(id_karyawan);
+        print(id_user);
         latitude = lat.toString();
         longitude = long.toString();
       });
     });
   }
 
-  Future <String> _absen(context, pr) async{
+  Future <Karyawan> getKaryawan() async{
+    final response = await http.get('https://ojanhtp.000webhostapp.com/viewsDataKaryawan');
+    if (response.statusCode == 200) {
+      // If the server did return a 200 OK response,
+      // then parse the JSON.
+      return Karyawan.fromJson(json.decode(response.body));
+    } else {
+      // If the server did not return a 200 OK response,
+      // then throw an exception.
+      throw Exception('Failed to load album');
+    }
+  }
+
+  Future <Absen> _absen(id_user, latitude, longitude, late_reason, pr) async{
     getLocation();
       print("success");
       final http.Response response = await http.post(
         'https://ojanhtp.000webhostapp.com/tambahDataAbsensi',
-        body: {
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+          },
+        body: jsonEncode(<String, String>{
+          'id_user': id_user,
           'lat': latitude,
           'long': longitude,
+          'late_reason': late_reason,
+        })
+      ).then((response)async{
+        if (response.statusCode == 200){
+          print("masuk fungsi absen");
+          getTime();
+          getLocation();
+          pr.show();
+          Future.delayed(Duration(seconds: 1)).then((onValue) async{
+            print("success");
+            if(hourNow < 08.00){
+              Fluttertoast.showToast(
+                  msg: "Anda Sukses Checkin",
+                  toastLength: Toast.LENGTH_SHORT,
+                  gravity: ToastGravity.BOTTOM,
+                  timeInSecForIos: 1,
+                  backgroundColor: Colors.green,
+                  textColor: Colors.white,
+                  fontSize: 16.0
+              );
+              if(pr.isShowing())
+                pr.hide();
+            }
+            else if (hourNow <= 08.30){
+              Fluttertoast.showToast(
+                  msg: "Anda Sukses Checkin",
+                  toastLength: Toast.LENGTH_SHORT,
+                  gravity: ToastGravity.BOTTOM,
+                  timeInSecForIos: 1,
+                  backgroundColor: Colors.green,
+                  textColor: Colors.white,
+                  fontSize: 16.0
+              );
+              if(pr.isShowing())
+                pr.hide();
+            }
+            else if (hourNow <= 09.00){
+              Fluttertoast.showToast(
+                  msg: "Anda Sukses Checkin",
+                  toastLength: Toast.LENGTH_SHORT,
+                  gravity: ToastGravity.BOTTOM,
+                  timeInSecForIos: 1,
+                  backgroundColor: Colors.green,
+                  textColor: Colors.white,
+                  fontSize: 16.0
+              );
+              if(pr.isShowing())
+                pr.hide();
+            }
+            else {
+              print('bad');
+              Fluttertoast.showToast(
+                  msg: "Anda Sukses Checkin",
+                  toastLength: Toast.LENGTH_SHORT,
+                  gravity: ToastGravity.BOTTOM,
+                  timeInSecForIos: 1,
+                  backgroundColor: Colors.green,
+                  textColor: Colors.white,
+                  fontSize: 16.0
+              );
+              if (pr.isShowing())
+                pr.hide();
+            }
+          });
         }
-      );
-      if (response==201 || response==200){
-        print("masuk fungsi absen");
-        getTime();
-        getLocation();
-        pr.show();
-        Future.delayed(Duration(seconds: 1)).then((onValue) async{
-
-          print("success");
-          if(hourNow < 08.00){
-            Fluttertoast.showToast(
-              msg: "Anda Sukses Checkin",
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.BOTTOM,
-              timeInSecForIos: 1,
-              backgroundColor: Colors.green,
-              textColor: Colors.white,
-              fontSize: 16.0
-            );
-          if(pr.isShowing())
-            pr.hide();
-          }
-          else if (hourNow <= 08.30){
-            Fluttertoast.showToast(
-              msg: "Anda Sukses Checkin",
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.BOTTOM,
-              timeInSecForIos: 1,
-              backgroundColor: Colors.green,
-              textColor: Colors.white,
-              fontSize: 16.0
-            );
-            if(pr.isShowing())
-              pr.hide();
-          }
-          else if (hourNow <= 09.00){
-            Fluttertoast.showToast(
-              msg: "Anda Sukses Checkin",
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.BOTTOM,
-              timeInSecForIos: 1,
-              backgroundColor: Colors.green,
-              textColor: Colors.white,
-              fontSize: 16.0
-            );
-            if(pr.isShowing())
-              pr.hide();
-          }
-          else {
+        else{
+          pr.show();
+          Future.delayed(Duration(seconds: 1)).then((onValue) async {
             print('bad');
             Fluttertoast.showToast(
-                msg: "Anda Sukses Checkin",
+                msg: "Anda Gagal Checkin",
                 toastLength: Toast.LENGTH_SHORT,
                 gravity: ToastGravity.BOTTOM,
                 timeInSecForIos: 1,
-                backgroundColor: Colors.green,
+                backgroundColor: Colors.red,
                 textColor: Colors.white,
                 fontSize: 16.0
             );
             if (pr.isShowing())
               pr.hide();
-          }
-        });
-      }
-      else{
-        pr.show();
-        Future.delayed(Duration(seconds: 1)).then((onValue) async {
-          print('bad');
-          Fluttertoast.showToast(
-              msg: "Anda Gagal Checkin",
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.BOTTOM,
-              timeInSecForIos: 1,
-              backgroundColor: Colors.red,
-              textColor: Colors.white,
-              fontSize: 16.0
-          );
-          if (pr.isShowing())
-            pr.hide();
-        });
-      }
+          });
+        }
+      });
   }
 
 
@@ -203,7 +236,7 @@ class _Attend extends State{
                   ),
                   onPressed:(){
                     if (absen == false){
-                      _absen(context,pr);
+                      _absen(id_user, latitude, longitude, late_reason, pr);
                       // absen = true;
                     }
                     else if (absen == true){
@@ -263,17 +296,34 @@ class _Attend extends State{
 }
 
 class Absen {
-  final int id;
+
+  final String id_user;
   final String lat;
   final String long;
+  final String late_reason;
 
-  Absen({this.id, this.lat, this.long});
+  Absen({this.id_user, this.lat, this.long, this.late_reason});
 
   factory Absen.fromJson(Map<String, dynamic> json) {
     return Absen(
-      id: json['id'],
-      lat: json['lat'],
-      long: json['long']
+        id_user: json['id_user'],
+        lat: json['lat'],
+        long: json['long'],
+        late_reason: json['late_reason'],
+    );
+  }
+}
+
+class Karyawan {
+  final int id_user;
+  final int id_karyawan;
+
+  Karyawan({this.id_user, this.id_karyawan});
+
+  factory Karyawan.fromJson(Map<String, dynamic> json) {
+    return Karyawan(
+      id_user: json['id_user'],
+      id_karyawan: json['id_karyawan'],
     );
   }
 }
