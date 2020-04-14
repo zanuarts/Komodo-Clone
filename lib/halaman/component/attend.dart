@@ -24,6 +24,7 @@ class _Attend extends State{
   String id_karyawan = '';
   String id_user = '';
   String late_reason = 'test';
+  String msg = 'Press the button to attend';
   // bool absen = false;
 
   Future<String> getData() async{
@@ -37,7 +38,6 @@ class _Attend extends State{
   void initState(){
     getData();
     getTime();
-    getKaryawan();
     _timeString = _formatDateTime(DateTime.now());
     Timer.periodic(Duration(seconds: 1), (Timer t) => getTime());
   }
@@ -88,19 +88,6 @@ class _Attend extends State{
     });
   }
 
-  Future <Karyawan> getKaryawan() async{
-    final response = await http.get('https://ojanhtp.000webhostapp.com/viewsDataKaryawan');
-    if (response.statusCode == 200) {
-      // If the server did return a 200 OK response,
-      // then parse the JSON.
-      return Karyawan.fromJson(json.decode(response.body));
-    } else {
-      // If the server did not return a 200 OK response,
-      // then throw an exception.
-      throw Exception('Failed to load album');
-    }
-  }
-
   Future <Absen> _absen(id_user, latitude, longitude, late_reason, pr) async{
     getLocation();
       print("success");
@@ -117,6 +104,7 @@ class _Attend extends State{
         })
       ).then((response)async{
         if (response.statusCode == 200){
+
           print("masuk fungsi absen");
           getTime();
           getLocation();
@@ -133,6 +121,13 @@ class _Attend extends State{
                   textColor: Colors.white,
                   fontSize: 16.0
               );
+              setState(() {
+                if (msg.startsWith('P')) {
+                  msg = 'You have attended';
+                } else {
+                  msg = 'Press the button to attend';
+                }
+              });
               if(pr.isShowing())
                 pr.hide();
             }
@@ -148,6 +143,13 @@ class _Attend extends State{
               );
               if(pr.isShowing())
                 pr.hide();
+              setState(() {
+                if (msg.startsWith('P')) {
+                  msg = 'You have attended';
+                } else {
+                  msg = 'Press the button to attend';
+                }
+              });
             }
             else if (hourNow <= 09.00){
               Fluttertoast.showToast(
@@ -161,6 +163,13 @@ class _Attend extends State{
               );
               if(pr.isShowing())
                 pr.hide();
+              setState(() {
+                if (msg.startsWith('P')) {
+                  msg = 'You have attended';
+                } else {
+                  msg = 'Press the button to attend';
+                }
+              });
             }
             else {
               print('bad');
@@ -175,7 +184,15 @@ class _Attend extends State{
               );
               if (pr.isShowing())
                 pr.hide();
+              setState(() {
+                if (msg.startsWith('P')) {
+                  msg = 'You have attended';
+                } else {
+                  msg = 'Press the button to attend';
+                }
+              });
             }
+
           });
         }
         else{
@@ -193,11 +210,17 @@ class _Attend extends State{
             );
             if (pr.isShowing())
               pr.hide();
+            setState(() {
+              if (msg.startsWith('P')) {
+                msg = 'You have attended';
+              } else {
+                msg = 'Press the button to attend';
+              }
+            });
           });
         }
       });
   }
-
 
   _checkout(){
     print("masuk check out");
@@ -215,6 +238,11 @@ class _Attend extends State{
       );
       if(pr.isShowing())
         pr.hide();
+      setState(() {
+        if (msg.startsWith('Y')) {
+          msg = 'Checked out success! Thank you!';
+        }
+      });
     });
 //    return absen = false;
   }
@@ -235,15 +263,23 @@ class _Attend extends State{
                     size: 40,
                   ),
                   onPressed:(){
-                    if (absen == false){
+                    if (msg.startsWith('P')) {
                       _absen(id_user, latitude, longitude, late_reason, pr);
-                      // absen = true;
                     }
-                    else if (absen == true){
+                    else if (msg.startsWith('Y')){
                       _checkout();
-                      // absen = false;
                     }
-                    // _absen();
+                    else{
+                      Fluttertoast.showToast(
+                          msg: "Udah gausah absen lagi",
+                          toastLength: Toast.LENGTH_SHORT,
+                          gravity: ToastGravity.BOTTOM,
+                          timeInSecForIos: 1,
+                          backgroundColor: Colors.green,
+                          textColor: Colors.white,
+                          fontSize: 16.0
+                      );
+                    }
                   },
                 ),
               ),
@@ -286,7 +322,7 @@ class _Attend extends State{
                         ),
                       ],
                     ),
-                    Text('Press the button to checkpoint', style: TextStyle(color: Colors.black),),
+                    Text(msg, style: TextStyle(color: Colors.black),),
                   ],
                 ),
               )
@@ -310,20 +346,6 @@ class Absen {
         lat: json['lat'],
         long: json['long'],
         late_reason: json['late_reason'],
-    );
-  }
-}
-
-class Karyawan {
-  final int id_user;
-  final int id_karyawan;
-
-  Karyawan({this.id_user, this.id_karyawan});
-
-  factory Karyawan.fromJson(Map<String, dynamic> json) {
-    return Karyawan(
-      id_user: json['id_user'],
-      id_karyawan: json['id_karyawan'],
     );
   }
 }
