@@ -1,17 +1,13 @@
 import 'dart:async';
 import 'package:http/http.dart' as http;
-import 'dart:io';
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:http/io_client.dart';
 import 'package:intl/intl.dart';
-import 'package:komodo_ui/components/globalkey.dart';
 import 'package:location/location.dart';
 import 'package:progress_dialog/progress_dialog.dart';
-import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Attend extends StatefulWidget{
@@ -20,17 +16,28 @@ class Attend extends StatefulWidget{
 
 class _Attend extends State{
   ProgressDialog pr;
-  var personid;
-  String id_karyawan = '';
-  String id_user = '';
-  String late_reason = 'test';
+  String idKaryawan = '';
+  String idUser = '';
+  String lateReason = 'test';
   String msg = 'Press the button to attend';
-  // bool absen = false;
+
+   String resetAbsen(){
+    var hour = DateTime.now().hour;
+    if(hour > 0 ){
+      setState(() {
+        if (msg.startsWith('C')) {
+          return msg = 'Press the button to attend';
+        } else {
+          return msg = 'Press the button to attend';
+        }
+      });
+    }
+  }
 
   Future<String> getData() async{
     SharedPreferences pref = await SharedPreferences.getInstance();
     setState(() {
-      id_user = pref.getString('id_user');
+      idUser = pref.getString('id_user');
     });
   }
 
@@ -38,6 +45,7 @@ class _Attend extends State{
   void initState(){
     getData();
     getTime();
+    resetAbsen();
     _timeString = _formatDateTime(DateTime.now());
     Timer.periodic(Duration(seconds: 1), (Timer t) => getTime());
   }
@@ -80,31 +88,27 @@ class _Attend extends State{
         _userPostion = LatLng(lat, long);
         print("Lokasi di : ");
         print(_userPostion);
-        print(id_karyawan);
-        print(id_user);
+        print(idKaryawan);
+        print(idUser);
         latitude = lat.toString();
         longitude = long.toString();
       });
     });
   }
 
-  Future <Absen> _absen(id_user, latitude, longitude, late_reason, pr) async{
+  Future <Absen> _absen(idUser, latitude, longitude, lateReason, pr) async{
     getLocation();
       print("success");
       final http.Response response = await http.post(
         'https://ojanhtp.000webhostapp.com/tambahDataAbsensi',
-          headers: <String, String>{
-            'Content-Type': 'application/json; charset=UTF-8',
-          },
-        body: jsonEncode(<String, String>{
-          'id_user': id_user,
-          'lat': latitude,
-          'long': longitude,
-          'late_reason': late_reason,
-        })
-      ).then((response)async{
+        body: {
+          'id_user': idUser,
+          'lattitude': latitude,
+          'longitude': longitude,
+          'late_reason': lateReason,
+        });
+//      ).then((response)async{
         if (response.statusCode == 200){
-
           print("masuk fungsi absen");
           getTime();
           getLocation();
@@ -192,8 +196,8 @@ class _Attend extends State{
                 }
               });
             }
-
           });
+          return Absen.fromJson(json.decode(response.body));
         }
         else{
           pr.show();
@@ -218,39 +222,52 @@ class _Attend extends State{
               }
             });
           });
+          throw Exception('Failed to absen.');
         }
-      });
+//      });
   }
 
-  _checkout(){
-    print("masuk check out");
-    pr.show();
-    
-    Future.delayed(Duration(seconds: 1)).then((onValue) async{
-      Fluttertoast.showToast(
-        msg: "Anda Sukses CheckOut",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        timeInSecForIos: 1,
-        backgroundColor: Colors.green,
-        textColor: Colors.white,
-        fontSize: 16.0
-      );
-      if(pr.isShowing())
-        pr.hide();
-      setState(() {
-        if (msg.startsWith('Y')) {
-          msg = 'Checked out success! Thank you!';
-        }
+  String leave_reason = 'test in app';
+
+  _checkout()async{
+    final http.Response response = await http.post(
+      'https://ojanhtp.000webhostapp.com/checkOut/$idUser',
+      body: {
+        'leave_reason': leave_reason,
       });
-    });
-//    return absen = false;
+//    ).then((response)async{
+      if (response.statusCode==200) {
+        print("masuk check out");
+        pr.show();
+        Future.delayed(Duration(seconds: 1)).then((onValue) async {
+          Fluttertoast.showToast(
+              msg: "Anda Sukses CheckOut",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIos: 1,
+              backgroundColor: Colors.green,
+              textColor: Colors.white,
+              fontSize: 16.0
+          );
+          if (pr.isShowing())
+            pr.hide();
+          setState(() {
+            if (msg.startsWith('Y')) {
+              msg = 'Checked out success! Thank you!';
+            }
+          });
+        });
+      return CheckOut.fromJson(json.decode(response.body));
+      }
+      else{
+        throw Exception('Failed to checkout.');
+      }
+//    });
   }
 
   @override
   Widget build(BuildContext context) {
     pr = new ProgressDialog(context, type: ProgressDialogType.Normal);
-    bool absen = false;
     return Row(
             children: <Widget>[
               Padding(
@@ -264,7 +281,7 @@ class _Attend extends State{
                   ),
                   onPressed:(){
                     if (msg.startsWith('P')) {
-                      _absen(id_user, latitude, longitude, late_reason, pr);
+                      _absen(idUser, latitude, longitude, lateReason, pr);
                     }
                     else if (msg.startsWith('Y')){
                       _checkout();
@@ -331,21 +348,34 @@ class _Attend extends State{
   }
 }
 
+
 class Absen {
 
   final String id_user;
-  final String lat;
-  final String long;
+  final String lattitude;
+  final String longitude;
   final String late_reason;
 
-  Absen({this.id_user, this.lat, this.long, this.late_reason});
+  Absen({this.id_user, this.lattitude, this.longitude, this.late_reason});
 
   factory Absen.fromJson(Map<String, dynamic> json) {
     return Absen(
         id_user: json['id_user'],
-        lat: json['lat'],
-        long: json['long'],
+        lattitude: json['lat'],
+        longitude: json['long'],
         late_reason: json['late_reason'],
+    );
+  }
+}
+
+class CheckOut{
+  final String leave_reason;
+
+  CheckOut({this.leave_reason});
+
+  factory CheckOut.fromJson(Map<String, dynamic> json){
+    return CheckOut(
+      leave_reason: json['leave_reason'],
     );
   }
 }
