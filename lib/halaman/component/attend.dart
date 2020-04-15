@@ -20,6 +20,7 @@ class _Attend extends State{
   String idUser = '';
   String lateReason = 'test';
   String msg = 'Press the button to attend';
+  var token;
 
    String resetAbsen(){
     var hour = DateTime.now().hour;
@@ -37,6 +38,7 @@ class _Attend extends State{
   Future<String> getData() async{
     SharedPreferences pref = await SharedPreferences.getInstance();
     setState(() {
+      token = pref.getString('token');
       idUser = pref.getString('id_user');
     });
   }
@@ -46,6 +48,7 @@ class _Attend extends State{
     getData();
     getTime();
     resetAbsen();
+    getLocation();
     _timeString = _formatDateTime(DateTime.now());
     Timer.periodic(Duration(seconds: 1), (Timer t) => getTime());
   }
@@ -62,11 +65,9 @@ class _Attend extends State{
     String dateNow = DateFormat.yMMMMEEEEd().format(now);
     String timeNow = DateFormat('kk.mm').format(now);
     double timeNowDouble = double.parse(timeNow);
-    // double tnow = double parse(_timeString);
     final String formattedDateTime = _formatDateTime(now);
     setState(() {
       _timeString = formattedDateTime;
-      // sekarang = tnow;
       hourNow = timeNowDouble;
       formattedDate = dateNow;
       formattedTime = timeNow;
@@ -76,10 +77,10 @@ class _Attend extends State{
   Location location = Location();
   double long;
   double lat;
-  String latitude;
-  String longitude;
+
   LatLng _userPostion = LatLng(0, 0);
   getLocation() async {
+
     var location = new Location();
     location.onLocationChanged().listen((LocationData currentLocation) {
       setState(() {
@@ -90,24 +91,27 @@ class _Attend extends State{
         print(_userPostion);
         print(idKaryawan);
         print(idUser);
-        latitude = lat.toString();
-        longitude = long.toString();
       });
     });
   }
 
-  Future <Absen> _absen(idUser, latitude, longitude, lateReason, pr) async{
+  Future <Absen> _absen() async{
     getLocation();
       print("success");
       final http.Response response = await http.post(
         'https://ojanhtp.000webhostapp.com/tambahDataAbsensi',
+        headers: {
+          'authorization':'bearer $token',
+        },
         body: {
-          'id_user': idUser,
-          'lattitude': latitude,
-          'longitude': longitude,
-          'late_reason': lateReason,
+          'id_user': '$idUser',
+          'lattitude': '$lat',
+          'longitude': '$long',
+          'late_reason': '$lateReason',
         });
 //      ).then((response)async{
+        print(response.statusCode);
+        print(response.body);
         if (response.statusCode == 200){
           print("masuk fungsi absen");
           getTime();
@@ -232,8 +236,11 @@ class _Attend extends State{
   _checkout()async{
     final http.Response response = await http.post(
       'https://ojanhtp.000webhostapp.com/checkOut/$idUser',
+        headers: {
+          'authorization':'bearer $token',
+        },
       body: {
-        'leave_reason': leave_reason,
+        'leave_reason': '$leave_reason',
       });
 //    ).then((response)async{
       if (response.statusCode==200) {
@@ -281,7 +288,7 @@ class _Attend extends State{
                   ),
                   onPressed:(){
                     if (msg.startsWith('P')) {
-                      _absen(idUser, latitude, longitude, lateReason, pr);
+                      _absen();
                     }
                     else if (msg.startsWith('Y')){
                       _checkout();
