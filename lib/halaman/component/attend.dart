@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
@@ -6,23 +7,33 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:komodo_ui/halaman/component/absen.dart';
 import 'package:location/location.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 
 class Attend extends StatefulWidget{
   _Attend createState() => _Attend();
 }
 
 class _Attend extends State{
+  final storage = new FlutterSecureStorage();
   ProgressDialog pr;
   String idKaryawan = '';
+  String idAbsensi = '';
   String idUser = '';
   String lateReason = 'test';
   String msg = 'Press the button to attend';
   var token;
 
-   String resetAbsen(){
+//  Future<Absen>getDataCheckout() async {
+//    SharedPreferences prefs = await SharedPreferences.getInstance();
+//    idAbsensi = prefs.getString('idAbsensi');
+//    print(idAbsensi);
+//  }
+
+  String resetAbsen(){
     var hour = DateTime.now().hour;
     if(hour > 0 ){
       setState(() {
@@ -89,7 +100,6 @@ class _Attend extends State{
         _userPostion = LatLng(lat, long);
         print("Lokasi di : ");
         print(_userPostion);
-        print(idKaryawan);
         print(idUser);
       });
     });
@@ -109,11 +119,18 @@ class _Attend extends State{
           'longitude': '$long',
           'late_reason': '$lateReason',
         });
+        final String res = response.body;
 //      ).then((response)async{
         print(response.statusCode);
         print(response.body);
         if (response.statusCode == 200){
+//          SharedPreferences prefs = await SharedPreferences.getInstance();
+//          setState(() {
+//            idAbsensi = prefs.getString('id_absensi');
+//          });
+          await storage.write(key: 'id_absensi', value: idAbsensi);
           print("masuk fungsi absen");
+          print(idAbsensi);
           getTime();
           getLocation();
           pr.show();
@@ -201,7 +218,13 @@ class _Attend extends State{
               });
             }
           });
+          // decode response JSON
+          final Map parsed = json.decode(res);
+          final signUp = Absen.fromJson(parsed);
+          final List parsedList = json.decode(res);
+          List<Absen> list = parsedList.map((val) =>  Absen.fromJson(val)).toList();
           return Absen.fromJson(json.decode(response.body));
+
         }
         else{
           pr.show();
@@ -218,32 +241,28 @@ class _Attend extends State{
             );
             if (pr.isShowing())
               pr.hide();
-            setState(() {
-              if (msg.startsWith('P')) {
-                msg = 'You have attended';
-              } else {
-                msg = 'Press the button to attend';
-              }
-            });
           });
           throw Exception('Failed to absen.');
         }
 //      });
   }
 
-  String leave_reason = 'test in app';
 
-  _checkout()async{
+
+  String leave_reason = 'test in app';
+  Future<Hasil>_checkout()async{
     final http.Response response = await http.post(
-      'https://ojanhtp.000webhostapp.com/checkOut/$idUser',
+      'https://ojanhtp.000webhostapp.com/checkOut/$idAbsensi',
         headers: {
           'authorization':'bearer $token',
         },
       body: {
         'leave_reason': '$leave_reason',
       });
+    print(idAbsensi);
+      print(response.body);
 //    ).then((response)async{
-      if (response.statusCode==200) {
+      if (response == 200) {
         print("masuk check out");
         pr.show();
         Future.delayed(Duration(seconds: 1)).then((onValue) async {
@@ -264,10 +283,24 @@ class _Attend extends State{
             }
           });
         });
-      return CheckOut.fromJson(json.decode(response.body));
+      return Hasil.fromJson(json.decode(response.body));
+
       }
       else{
-        throw Exception('Failed to checkout.');
+        pr.show();
+        Future.delayed(Duration(seconds: 1)).then((onValue) async {
+          Fluttertoast.showToast(
+              msg: "Gagal Checkout",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIos: 1,
+              backgroundColor: Colors.red,
+              textColor: Colors.white,
+              fontSize: 16.0
+          );
+          if (pr.isShowing())
+            pr.hide();
+        });
       }
 //    });
   }
@@ -356,24 +389,25 @@ class _Attend extends State{
 }
 
 
-class Absen {
+//class Absen {
+//
+//  final String id_user;
+//  final String lattitude;
+//  final String longitude;
+//  final String late_reason;
+//
+//  Absen({this.id_user, this.lattitude, this.longitude, this.late_reason});
+//
+//  factory Absen.fromJson(Map<String, dynamic> json) {
+//    return Absen(
+//        id_user: json['id_user'],
+//        lattitude: json['lat'],
+//        longitude: json['long'],
+//        late_reason: json['late_reason'],
+//    );
+//  }
+//}
 
-  final String id_user;
-  final String lattitude;
-  final String longitude;
-  final String late_reason;
-
-  Absen({this.id_user, this.lattitude, this.longitude, this.late_reason});
-
-  factory Absen.fromJson(Map<String, dynamic> json) {
-    return Absen(
-        id_user: json['id_user'],
-        lattitude: json['lat'],
-        longitude: json['long'],
-        late_reason: json['late_reason'],
-    );
-  }
-}
 
 class CheckOut{
   final String leave_reason;
@@ -386,3 +420,27 @@ class CheckOut{
     );
   }
 }
+
+//class Id {
+//  final int id_absensi;
+//
+//  Photo({this.id_absensi});
+//
+//  factory Id.fromJson(Map<String, dynamic> json) {
+//    return Id(
+//      id_absensi: json['id'] as String,
+//    );
+//  }
+//}
+//
+//List<Absen> parseAbsen(String responseBody) {
+//  final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
+//
+//  return parsed.map<Absen>((json) => Absen.fromJson(json)).toList();
+//}
+////
+//Future<List<Absen>> fetchAbsen(http.Client client) async {
+//  final response =  await client.get('https://ojanhtp.000webhostapp.com/viewsDataAbsensi/');
+//
+//  return parseAbsen(response.body);
+//}
