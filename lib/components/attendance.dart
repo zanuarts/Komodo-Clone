@@ -27,6 +27,7 @@ class ListAtt extends State{
   }
 
   @override
+  // ignore: must_call_super
   void initState(){
     this.getData();
     print("masuk api");
