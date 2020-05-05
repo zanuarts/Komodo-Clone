@@ -25,6 +25,17 @@ class Home extends StatefulWidget {
 class _HalamannavState extends State {
   int currentPage = 1;
   int _selectedIndex = 1;
+
+  List<Widget> pageList = List<Widget>();
+
+  @override
+  void initState() {
+    pageList.add(Halamansatu());
+    pageList.add(Halamandua());
+    pageList.add(Halamantiga());
+    pageList.add(Halamanempat());
+    super.initState();
+  }
     
 
   final _widgetOptions = [
@@ -32,7 +43,6 @@ class _HalamannavState extends State {
     Halamandua(),
     Halamantiga(),
     Halamanempat(),
-
   ];
 
   
@@ -56,7 +66,11 @@ class _HalamannavState extends State {
       onWillPop: onWillPop,
       child: SafeArea(
         child: Scaffold(
-          body: _widgetOptions.elementAt(_selectedIndex),
+          body: IndexedStack(
+            index: _selectedIndex,
+            // children: pageList.elementAt(_selectedIndex),
+            children: _widgetOptions,
+          ), 
           bottomNavigationBar : FancyBottomNavigation(
             barBackgroundColor: Color(0xFF404040),
             textColor: Colors.white,
@@ -68,7 +82,7 @@ class _HalamannavState extends State {
               ),
               TabData(
                 iconData: Icons.fingerprint,
-                title: "Absence",
+                title: "Attendance",
               ),
               TabData(
                 iconData: Icons.work,
@@ -81,13 +95,13 @@ class _HalamannavState extends State {
             ],
             //type: BottomNavigationBarType.fixed,
             currentPage: _selectedIndex,
-            //fixedColor: Colors.deepOrangeAccent,
             onTabChangedListener: onItemTapped,
           )
         )
       )
     );
   }
+  
   void onItemTapped(int index){
     setState((){
       _selectedIndex = index;

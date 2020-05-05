@@ -20,7 +20,7 @@ class _DrawerAppState extends State<DrawerApp> {
     SharedPreferences pref = await SharedPreferences.getInstance();
     setState(() {
       foto = pref.getString("photo");
-      name = pref.getString("full_name");
+      name = pref.getString("username");
       role = pref.getString("role_name");
     });
   }

@@ -14,7 +14,7 @@ class _HeaderState extends State{
     SharedPreferences pref = await SharedPreferences.getInstance();
     setState(() {
       foto = pref.getString('photo');
-      name = pref.getString('full_name');
+      name = pref.getString('username');
     });
   }
 

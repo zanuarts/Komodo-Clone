@@ -21,10 +21,12 @@ class _Attend extends State{
   ProgressDialog pr;
   String idKaryawan = '';
   String idAbsensi = '';
+  String checkinTime = '';
   String idUser = '';
-  String lateReason = 'test';
+  String lateReason = 'Datang tepat waktu';
   String msg = 'Press the button to attend';
   var token;
+  final bool keepPage = true;
 
   resetAbsen(){
     var hour = DateTime.now().hour;
@@ -81,10 +83,8 @@ class _Attend extends State{
   Location location = Location();
   double long;
   double lat;
-
   LatLng _userPostion = LatLng(0, 0);
   getLocation() async {
-
     var location = new Location();
     location.onLocationChanged().listen((LocationData currentLocation) {
       setState(() {
@@ -97,6 +97,52 @@ class _Attend extends State{
       });
     });
   }
+
+  TextEditingController _textFieldController = TextEditingController();
+
+  _displayDialog(BuildContext context) async {
+    return showDialog(
+      context: context,
+       builder: (context) {
+        return AlertDialog(
+          title: Text('Kenapa telat bro?'),
+          content: TextField(
+            controller: _textFieldController,
+            decoration: InputDecoration(hintText: "Masukan"),
+          ),
+          actions: <Widget>[
+            new FlatButton(
+              child: new Text('SUBMIT'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            )
+          ],
+        );
+      }
+    );
+  }
+
+  // Future<Absen> _updateLateReason()async{
+  //   final http.Response response = await http.put(
+  //     'https://ojanhtp.000webhostapp.com/tambahDataAbsensi',
+  //     headers: {
+  //       'authorization':'bearer $token',
+  //     },
+  //     body: jsonEncode(<String, String>{
+  //       'late_reason': '$lateReason',
+  //     }));
+  //     if (response.statusCode == 200) {
+  //       // If the server did return a 200 UPDATED response,
+  //       // then parse the JSON.
+  //       return Absen.fromJson(json.decode(response.body));
+  //     } else {
+  //       // If the server did not return a 200 UPDATED response,
+  //       // then throw an exception.
+  //       throw Exception('Failed to load album');
+  //     }
+  // }
+
 
   Future <Absen> _absen() async{
     getLocation();
@@ -112,18 +158,14 @@ class _Attend extends State{
           'longitude': '$long',
           'late_reason': '$lateReason',
         });
-        final String res = response.body;
-//      ).then((response)async{
-        print(response.statusCode);
-        print(response.body);
         if (response.statusCode == 200){
+          _displayDialog(context);
           var data = jsonDecode(response.body)
           ['data']['hasil'];
-          print(data);
           var idabsen = data['id_absensi'];
-          print(idabsen);
-          print("masuk fungsi absen");
+          var cekinTime = data['checkin_time'];
           idAbsensi = idabsen;
+          checkinTime = cekinTime;
           getTime();
           getLocation();
           pr.show();
@@ -141,9 +183,7 @@ class _Attend extends State{
               );
               setState(() {
                 if (msg.startsWith('P')) {
-                  msg = 'You have attended';
-                } else {
-                  msg = 'Press the button to attend';
+                  msg = 'You have attended at $checkinTime';
                 }
               });
               if(pr.isShowing())
@@ -159,17 +199,17 @@ class _Attend extends State{
                   textColor: Colors.white,
                   fontSize: 16.0
               );
+              
               if(pr.isShowing())
                 pr.hide();
               setState(() {
                 if (msg.startsWith('P')) {
-                  msg = 'You have attended';
-                } else {
-                  msg = 'Press the button to attend';
+                  msg = 'You have attended at $checkinTime';
                 }
               });
             }
             else if (hourNow <= 09.00){
+              _displayDialog(context);
               Fluttertoast.showToast(
                   msg: "Anda Sukses Checkin",
                   toastLength: Toast.LENGTH_SHORT,
@@ -183,14 +223,11 @@ class _Attend extends State{
                 pr.hide();
               setState(() {
                 if (msg.startsWith('P')) {
-                  msg = 'You have attended';
-                } else {
-                  msg = 'Press the button to attend';
+                  msg = 'You have attended at $checkinTime';
                 }
               });
             }
             else {
-              print('bad');
               Fluttertoast.showToast(
                   msg: "Anda Sukses Checkin",
                   toastLength: Toast.LENGTH_SHORT,
@@ -202,11 +239,11 @@ class _Attend extends State{
               );
               if (pr.isShowing())
                 pr.hide();
+              // _updateLateReason();
+              _displayDialog(context);
               setState(() {
                 if (msg.startsWith('P')) {
-                  msg = 'You have attended';
-                } else {
-                  msg = 'Press the button to attend';
+                  msg = 'You have attended at $checkinTime';
                 }
               });
             }
@@ -233,7 +270,7 @@ class _Attend extends State{
         }
   }
 
-  String leave_reason = 'test in app';
+  String leave_reason = 'Pulang tepat waktu';
   Future<Hasil>_checkout()async{
     final http.Response response = await http.post(
       'https://ojanhtp.000webhostapp.com/checkOut/$idAbsensi',
@@ -245,7 +282,6 @@ class _Attend extends State{
       });
       print(idAbsensi);
       print(response.body);
-//    ).then((response)async{
       if (response.statusCode == 200) {
         print("masuk check out");
         pr.show();
@@ -286,101 +322,85 @@ class _Attend extends State{
             pr.hide();
         });
       }
-//    });
   }
 
   @override
   Widget build(BuildContext context) {
     pr = new ProgressDialog(context, type: ProgressDialogType.Normal);
     return Row(
+      children: <Widget>[
+        Padding(
+          padding: const EdgeInsets.only(left: 10, top: 25, bottom: 15),
+          child: FloatingActionButton(
+            backgroundColor: Colors.blueAccent,
+            elevation: 0.0,
+            child: Icon(
+              Icons.fingerprint,
+              size: 40,
+            ),
+            onPressed:(){
+              if (msg.startsWith('P')) {
+                _absen();
+              }
+              else if (msg.startsWith('Y')){
+                _checkout();
+              }
+              else{
+                Fluttertoast.showToast(
+                  msg: "Udah gausah absen lagi",
+                  toastLength: Toast.LENGTH_SHORT,
+                  gravity: ToastGravity.BOTTOM,
+                  timeInSecForIos: 1,
+                  backgroundColor: Colors.green,
+                  textColor: Colors.white,
+                  fontSize: 16.0
+                );
+              }
+            },
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(left: 10, top: 20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.only(left: 10, top: 25, bottom: 15),
-                child: FloatingActionButton(
-                  backgroundColor: Colors.blueAccent,
-                  elevation: 0.0,
-                  child: Icon(
-                    Icons.fingerprint,
-                    size: 40,
+              Row(
+                children: <Widget>[
+                  Icon(
+                    Icons.calendar_today,
+                    size: 15,
                   ),
-                  onPressed:(){
-                    if (msg.startsWith('P')) {
-                      _absen();
-                    }
-                    else if (msg.startsWith('Y')){
-                      _checkout();
-                    }
-                    else{
-                      Fluttertoast.showToast(
-                          msg: "Udah gausah absen lagi",
-                          toastLength: Toast.LENGTH_SHORT,
-                          gravity: ToastGravity.BOTTOM,
-                          timeInSecForIos: 1,
-                          backgroundColor: Colors.green,
-                          textColor: Colors.white,
-                          fontSize: 16.0
-                      );
-                    }
-                  },
-                ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 5),
+                    child:Text(
+                      formattedDate,
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ],
               ),
-          Padding(
-                padding: const EdgeInsets.only(left: 10, top: 20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Row(
-                      children: <Widget>[
-                        Icon(
-                          Icons.calendar_today,
-                          size: 15,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 5),
-                          child:Text(
-                            formattedDate,
-                            // 'test',
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ],
+              Row(
+                children: <Widget>[
+                  Icon(
+                    Icons.timer,
+                    size: 15,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 5),
+                    child:Text(
+                      _timeString,
+                      style: TextStyle(color: Colors.black),),
                     ),
-                    Row(
-                      children: <Widget>[
-                        Icon(
-                          Icons.timer,
-                          size: 15,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 5),
-                          child:Text(
-                            _timeString,
-                            // 'test',
-                            style: TextStyle(color: Colors.black),),
-                        ),
-                      ],
-                    ),
-                    Text(msg, style: TextStyle(color: Colors.black),),
                   ],
                 ),
-              )
+              Text(msg, style: TextStyle(color: Colors.black),),
             ],
-          );
-  }
-}
-
-
-class CheckOut{
-  final String leave_reason;
-
-  CheckOut({this.leave_reason});
-
-  factory CheckOut.fromJson(Map<String, dynamic> json){
-    return CheckOut(
-      leave_reason: json['leave_reason'],
+          ),
+        )
+      ],
     );
   }
 }
