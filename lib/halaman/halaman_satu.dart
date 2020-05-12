@@ -89,7 +89,7 @@ class _MyappState extends State {
                         child: ClipOval(
                         child: Image.asset(
                       // child: Image.network(
-                        'avatar.png',
+                        'assets/avatar.jpg',
                           width: 200,
                           height: 200,
                           fit: BoxFit.cover,

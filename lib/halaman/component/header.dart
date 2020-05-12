@@ -77,9 +77,9 @@ class _HeaderState extends State{
                   child:  CircleAvatar(
                     radius: 40,
                     child: ClipOval(
-                      child: Image.asset(
+                      child: new Image.asset(
                       // child: Image.network(
-                        'avatar.png',
+                        'assets/avatar.jpg',
                         width: 200,
                         height: 200,
                         fit: BoxFit.cover,

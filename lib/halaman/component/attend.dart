@@ -46,6 +46,8 @@ class _Attend extends State{
         textColor: Colors.white,
         fontSize: 16.0
       );
+      if(pr.isShowing())
+        pr.hide();
     }
   }
 

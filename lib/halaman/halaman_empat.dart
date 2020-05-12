@@ -15,7 +15,7 @@ class _MyappState extends State {
     SharedPreferences pref = await SharedPreferences.getInstance();
     setState(() {
       foto = pref.getString('photo');
-      name = pref.getString('full_name');
+      name = pref.getString('username');
     });
     return String.fromEnvironment(name);
   }
@@ -80,14 +80,14 @@ class _MyappState extends State {
                       padding: const EdgeInsets.only(left:35, bottom: 10, right: 10, top: 10),
                       child:  CircleAvatar(
                         radius: 40,
-                        child: ClipOval(
-                        child: Image.asset(
-                      // child: Image.network(
-                          'avatar.png',
-                          width: 200,
-                          height: 200,
-                          fit: BoxFit.cover,
-                        ),
+                          child: ClipOval(
+                            child: Image.asset(
+                            // child: Image.network(
+                            'assets/avatar.jpg',
+                            width: 200,
+                            height: 200,
+                            fit: BoxFit.cover,
+                          ),
                         )
                       ),
                     ),

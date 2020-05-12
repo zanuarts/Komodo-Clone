@@ -63,8 +63,8 @@ class _DrawerAppState extends State<DrawerApp> {
                       child:  CircleAvatar(
                         radius: 40,
                         child: ClipOval(
-                        child: Image.network(
-                          '$foto',
+                        child: Image.asset(
+                          'assets/avatar.jpg',
                           width: 200,
                           height: 200,
                           fit: BoxFit.cover,

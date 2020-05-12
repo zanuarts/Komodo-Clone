@@ -10,8 +10,10 @@ import 'package:komodo_ui/splash/splash.dart';
 import 'package:komodo_ui/home/home.dart';
 import 'package:komodo_ui/common/common.dart';
 import 'package:komodo_ui/repository/api_client.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SimpleBlocDelegate extends BlocDelegate {
+  
   @override
   void onEvent(Bloc bloc, Object event) {
     super.onEvent(bloc, event);
@@ -32,6 +34,7 @@ class SimpleBlocDelegate extends BlocDelegate {
 }
 
 void main() {
+  
   BlocSupervisor.delegate = SimpleBlocDelegate();
   final userRepository = UserRepository();
   final ApiRepository apiRepository = ApiRepository(apiFactory: ApiFactory(httpClient: http.Client()));
@@ -48,6 +51,8 @@ void main() {
 }
 
 class App extends StatelessWidget {
+  // SharedPreferences prefs = await SharedPreferences.getInstance();
+  // prefs?.setBool("isLoggedIn", true);
   final UserRepository userRepository;
   final ApiRepository apiRepository;
   App({Key key, @required this.userRepository, @required this.apiRepository}) :assert(apiRepository != null), super(key: key);

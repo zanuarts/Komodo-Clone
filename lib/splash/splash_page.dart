@@ -10,4 +10,5 @@ class SplashPage extends StatelessWidget {
       backgroundColor: Colors.orangeAccent,
     );
   }
+  
 }
