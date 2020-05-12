@@ -5,9 +5,11 @@ class SplashPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: Image.asset('logo-icon.png')
+        child: Image.asset('assets/logo-icon.png',
+          width: 150
+        )
       ),
-      backgroundColor: Colors.orangeAccent,
+      backgroundColor: Colors.deepOrange,
     );
   }
   
