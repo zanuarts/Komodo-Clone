@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
@@ -24,6 +23,7 @@ class _Attend extends State{
   String checkinTime = '';
   String idUser = '';
   String lateReason = 'Datang tepat waktu';
+  String leave_reason = 'Pulang tepat waktu';
   String msg = 'Press the button to attend';
   var token;
   final bool keepPage = true;
@@ -98,22 +98,29 @@ class _Attend extends State{
     });
   }
 
-  TextEditingController _textFieldController = TextEditingController();
+  final myController = TextEditingController();
 
-  _displayDialog(BuildContext context) async {
+  _alasanTelat(BuildContext context) async {
     return showDialog(
       context: context,
        builder: (context) {
         return AlertDialog(
           title: Text('Kenapa telat bro?'),
           content: TextField(
-            controller: _textFieldController,
-            decoration: InputDecoration(hintText: "Masukan"),
+            controller: myController,
+            decoration: InputDecoration(hintText: "Masukan Alasan"),
+            onChanged: (text){
+              lateReason = text;
+            },
           ),
           actions: <Widget>[
             new FlatButton(
               child: new Text('SUBMIT'),
               onPressed: () {
+                pr.show();
+                Future.delayed(Duration(seconds: 1)).then((onValue) async{
+                  _verCheckIn();
+                });
                 Navigator.of(context).pop();
               },
             )
@@ -123,206 +130,193 @@ class _Attend extends State{
     );
   }
 
-  // Future<Absen> _updateLateReason()async{
-  //   final http.Response response = await http.put(
-  //     'https://ojanhtp.000webhostapp.com/tambahDataAbsensi',
-  //     headers: {
-  //       'authorization':'bearer $token',
-  //     },
-  //     body: jsonEncode(<String, String>{
-  //       'late_reason': '$lateReason',
-  //     }));
-  //     if (response.statusCode == 200) {
-  //       // If the server did return a 200 UPDATED response,
-  //       // then parse the JSON.
-  //       return Absen.fromJson(json.decode(response.body));
-  //     } else {
-  //       // If the server did not return a 200 UPDATED response,
-  //       // then throw an exception.
-  //       throw Exception('Failed to load album');
-  //     }
-  // }
-
-
-  Future <Absen> _absen() async{
-    getLocation();
-      print("success");
-      final http.Response response = await http.post(
-        'https://ojanhtp.000webhostapp.com/tambahDataAbsensi',
-        headers: {
-          'authorization':'bearer $token',
-        },
-        body: {
-          'id_user': '$idUser',
-          'lattitude': '$lat',
-          'longitude': '$long',
-          'late_reason': '$lateReason',
-        });
-        if (response.statusCode == 200){
-          _displayDialog(context);
-          var data = jsonDecode(response.body)
-          ['data']['hasil'];
-          var idabsen = data['id_absensi'];
-          var cekinTime = data['checkin_time'];
-          idAbsensi = idabsen;
-          checkinTime = cekinTime;
-          getTime();
-          getLocation();
-          pr.show();
-          Future.delayed(Duration(seconds: 1)).then((onValue) async{
-            print("success");
-            if(hourNow < 08.00){
-              Fluttertoast.showToast(
-                  msg: "Anda Sukses Checkin",
-                  toastLength: Toast.LENGTH_SHORT,
-                  gravity: ToastGravity.BOTTOM,
-                  timeInSecForIos: 1,
-                  backgroundColor: Colors.green,
-                  textColor: Colors.white,
-                  fontSize: 16.0
-              );
-              setState(() {
-                if (msg.startsWith('P')) {
-                  msg = 'You have attended at $checkinTime';
-                }
-              });
-              if(pr.isShowing())
-                pr.hide();
-            }
-            else if (hourNow <= 08.30){
-              Fluttertoast.showToast(
-                  msg: "Anda Sukses Checkin",
-                  toastLength: Toast.LENGTH_SHORT,
-                  gravity: ToastGravity.BOTTOM,
-                  timeInSecForIos: 1,
-                  backgroundColor: Colors.green,
-                  textColor: Colors.white,
-                  fontSize: 16.0
-              );
-              
-              if(pr.isShowing())
-                pr.hide();
-              setState(() {
-                if (msg.startsWith('P')) {
-                  msg = 'You have attended at $checkinTime';
-                }
-              });
-            }
-            else if (hourNow <= 09.00){
-              _displayDialog(context);
-              Fluttertoast.showToast(
-                  msg: "Anda Sukses Checkin",
-                  toastLength: Toast.LENGTH_SHORT,
-                  gravity: ToastGravity.BOTTOM,
-                  timeInSecForIos: 1,
-                  backgroundColor: Colors.green,
-                  textColor: Colors.white,
-                  fontSize: 16.0
-              );
-              if(pr.isShowing())
-                pr.hide();
-              setState(() {
-                if (msg.startsWith('P')) {
-                  msg = 'You have attended at $checkinTime';
-                }
-              });
-            }
-            else {
-              Fluttertoast.showToast(
-                  msg: "Anda Sukses Checkin",
-                  toastLength: Toast.LENGTH_SHORT,
-                  gravity: ToastGravity.BOTTOM,
-                  timeInSecForIos: 1,
-                  backgroundColor: Colors.green,
-                  textColor: Colors.white,
-                  fontSize: 16.0
-              );
-              if (pr.isShowing())
-                pr.hide();
-              // _updateLateReason();
-              _displayDialog(context);
-              setState(() {
-                if (msg.startsWith('P')) {
-                  msg = 'You have attended at $checkinTime';
-                }
-              });
-            }
-          });
-          return Absen.fromJson(json.decode(response.body));
-        }
-        else{
-          pr.show();
-          Future.delayed(Duration(seconds: 1)).then((onValue) async {
-            print('bad');
-            Fluttertoast.showToast(
-                msg: "Anda Gagal Checkin",
-                toastLength: Toast.LENGTH_SHORT,
-                gravity: ToastGravity.BOTTOM,
-                timeInSecForIos: 1,
-                backgroundColor: Colors.red,
-                textColor: Colors.white,
-                fontSize: 16.0
-            );
-            if (pr.isShowing())
-              pr.hide();
-          });
-          throw Exception('Failed to absen.');
-        }
+  _alasanPulang(BuildContext context) async {
+    return showDialog(
+      context: context,
+       builder: (context) {
+        return AlertDialog(
+          title: Text('Kenapa pulang bro?'),
+          content: TextField(
+            controller: myController,
+            decoration: InputDecoration(hintText: "Masukan Alasan"),
+            onChanged: (text){
+              leave_reason = text;
+            },
+          ),
+          actions: <Widget>[
+            new FlatButton(
+              child: new Text('SUBMIT'),
+              onPressed: () {
+                pr.show();
+                Future.delayed(Duration(seconds: 1)).then((onValue) async{
+                  _verCheckOut();
+                });
+                Navigator.of(context).pop();
+              },
+            )
+          ],
+        );
+      }
+    );
   }
 
-  String leave_reason = 'Pulang tepat waktu';
-  Future<Hasil>_checkout()async{
-    final http.Response response = await http.post(
-      'https://ojanhtp.000webhostapp.com/checkOut/$idAbsensi',
-        headers: {
-          'authorization':'bearer $token',
-        },
+  suksesCheckIn(){
+    Fluttertoast.showToast(
+      msg: "Anda Sukses Check In",
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIos: 1,
+      backgroundColor: Colors.green,
+      textColor: Colors.white,
+      fontSize: 16.0
+    );
+  }
+
+  gagalCheckIn(){
+    Fluttertoast.showToast(
+      msg: "Anda Gagal Check In",
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIos: 1,
+      backgroundColor: Colors.red,
+      textColor: Colors.white,
+      fontSize: 16.0
+    );
+  }
+
+  suksesCheckOut(){
+    Fluttertoast.showToast(
+      msg: "Anda Sukses CheckOut",
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIos: 1,
+      backgroundColor: Colors.green,
+      textColor: Colors.white,
+      fontSize: 16.0
+    );
+  }
+
+  gagalCheckOut(){
+    Fluttertoast.showToast(
+      msg: "Gagal Checkout",
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIos: 1,
+      backgroundColor: Colors.red,
+      textColor: Colors.white,
+      fontSize: 16.0
+    );
+  }
+
+  Future <Absen> _verCheckIn() async{
+    getLocation();
+    final http.Response response = await http.post('https://ojanhtp.000webhostapp.com/tambahDataAbsensi',
+      headers: {
+        'authorization':'bearer $token',
+      },
+      body: {
+        'id_user': '$idUser',
+        'lattitude': '$lat',
+        'longitude': '$long',
+        'late_reason': '$lateReason',
+      }
+    );
+    if (response.statusCode == 200){
+      var data = jsonDecode(response.body)
+      ['data']['hasil'];
+      var idabsen = data['id_absensi'];
+      var cekinTime = data['checkin_time'];
+      idAbsensi = idabsen;
+      checkinTime = cekinTime;
+      setState(() {
+        if (msg.startsWith('P')) {
+          msg = 'You have attended at $checkinTime';
+        }
+      });
+      suksesCheckIn();
+    }
+    else{
+      gagalCheckIn();
+    }
+  }
+
+  Future<Hasil> _verCheckOut()async{
+    final http.Response response = await http.post('https://ojanhtp.000webhostapp.com/checkOut/$idAbsensi',
+      headers: {
+        'authorization':'bearer $token',
+      },
       body: {
         'leave_reason': '$leave_reason',
-      });
-      print(idAbsensi);
-      print(response.body);
-      if (response.statusCode == 200) {
-        print("masuk check out");
-        pr.show();
-        Future.delayed(Duration(seconds: 1)).then((onValue) async {
-          Fluttertoast.showToast(
-              msg: "Anda Sukses CheckOut",
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.BOTTOM,
-              timeInSecForIos: 1,
-              backgroundColor: Colors.green,
-              textColor: Colors.white,
-              fontSize: 16.0
-          );
-          if (pr.isShowing())
-            pr.hide();
-          setState(() {
-            if (msg.startsWith('Y')) {
-              msg = 'Checked out success! Thank you!';
-            }
-          });
-        });
-      return Hasil.fromJson(json.decode(response.body));
-
       }
-      else{
-        pr.show();
-        Future.delayed(Duration(seconds: 1)).then((onValue) async {
-          Fluttertoast.showToast(
-              msg: "Gagal Checkout",
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.BOTTOM,
-              timeInSecForIos: 1,
-              backgroundColor: Colors.red,
-              textColor: Colors.white,
-              fontSize: 16.0
-          );
-          if (pr.isShowing())
-            pr.hide();
-        });
+    );
+    if (response.statusCode == 200) {
+      setState(() {
+        if (msg.startsWith('Y')) {
+          msg = 'Checked out success! Thank you!';
+        }
+      });
+      suksesCheckOut();
+      return Hasil.fromJson(json.decode(response.body));
+    }
+    else{
+      gagalCheckOut();
+    }
+  }
+
+  checkTimeOut(){
+    if(hourNow < 17.00){
+      if(pr.isShowing())
+        pr.hide();
+      _alasanPulang(context);
+      }
+      else {
+        if (pr.isShowing())
+          pr.hide();
+        _verCheckOut();
       }
   }
+
+  checkTimeIn(){
+    if(hourNow < 08.00){
+      if(pr.isShowing())
+        pr.hide();
+      _verCheckIn();
+      }
+      else if (hourNow <= 08.30){
+        if(pr.isShowing())
+          pr.hide();
+        _verCheckIn();
+      }
+      else if (hourNow <= 09.00){
+        if(pr.isShowing())
+          pr.hide();
+        _alasanTelat(context);
+      }
+      else {
+        if (pr.isShowing())
+          pr.hide();
+        _alasanTelat(context);
+      }
+  }
+
+  checkIn(){
+    pr.show();
+    getTime();
+    Future.delayed(Duration(seconds: 1)).then((onValue) async{
+      checkTimeIn();
+    });
+  }
+
+  checkOut(){
+    pr.show();
+    getTime();
+    Future.delayed(Duration(seconds: 1)).then((onValue) async{
+      checkTimeOut();
+    });
+  }
+
+
+  
 
   @override
   Widget build(BuildContext context) {
@@ -340,10 +334,10 @@ class _Attend extends State{
             ),
             onPressed:(){
               if (msg.startsWith('P')) {
-                _absen();
+                checkIn();
               }
               else if (msg.startsWith('Y')){
-                _checkout();
+                checkOut();
               }
               else{
                 Fluttertoast.showToast(

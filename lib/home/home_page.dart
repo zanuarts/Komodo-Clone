@@ -6,8 +6,6 @@ import 'package:komodo_ui/halaman/halaman_tiga.dart';
 import 'package:komodo_ui/halaman/halaman_empat.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:komodo_ui/extensions/fancy_bottom_navigation-0.3.2/lib/fancy_bottom_navigation.dart';
-
-
 void main(){
   runApp(
       new MaterialApp(
