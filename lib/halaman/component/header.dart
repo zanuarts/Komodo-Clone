@@ -16,6 +16,7 @@ class _HeaderState extends State{
       foto = pref.getString('photo');
       name = pref.getString('username');
     });
+    return String.fromEnvironment(name);
   }
 
   void initState(){
@@ -76,8 +77,9 @@ class _HeaderState extends State{
                   child:  CircleAvatar(
                     radius: 40,
                     child: ClipOval(
-                      child: Image.network(
-                        '$foto',
+                      child: Image.asset(
+                      // child: Image.network(
+                        'avatar.png',
                         width: 200,
                         height: 200,
                         fit: BoxFit.cover,

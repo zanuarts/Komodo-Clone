@@ -10,6 +10,7 @@ import 'package:komodo_ui/halaman/component/absen.dart';
 import 'package:location/location.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:geolocator/geolocator.dart';
 
 
 class Attend extends StatefulWidget{
@@ -23,10 +24,30 @@ class _Attend extends State{
   String checkinTime = '';
   String idUser = '';
   String lateReason = 'Datang tepat waktu';
-  String leave_reason = 'Pulang tepat waktu';
+  String leaveReason = 'Pulang tepat waktu';
   String msg = 'Press the button to attend';
+  double jarakM = 0.0;
   var token;
   final bool keepPage = true;
+
+  checkJarak()async{
+    jarakM = await Geolocator().distanceBetween(lat, long, -6.897980, 107.619328);
+    print(jarakM);
+    if (jarakM <= 100.0){
+      checkTimeIn(); 
+    }
+    else{
+      Fluttertoast.showToast(
+        msg: "Anda Diluar Jangkauan",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIos: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0
+      );
+    }
+  }
 
   resetAbsen(){
     var hour = DateTime.now().hour;
@@ -47,6 +68,7 @@ class _Attend extends State{
       token = pref.getString('token');
       idUser = pref.getString('id_user');
     });
+    return String.fromEnvironment(token);
   }
 
   @override
@@ -84,7 +106,7 @@ class _Attend extends State{
   double long;
   double lat;
   LatLng _userPostion = LatLng(0, 0);
-  getLocation() async {
+  Future<Map<String, double>> getLocation() async {
     var location = new Location();
     location.onLocationChanged().listen((LocationData currentLocation) {
       setState(() {
@@ -94,6 +116,7 @@ class _Attend extends State{
         print("Lokasi di : ");
         print(_userPostion);
         print(idUser);
+        print(jarakM);
       });
     });
   }
@@ -105,7 +128,7 @@ class _Attend extends State{
       context: context,
        builder: (context) {
         return AlertDialog(
-          title: Text('Kenapa telat bro?'),
+          title: Text('Kenapa anda telat?'),
           content: TextField(
             controller: myController,
             decoration: InputDecoration(hintText: "Masukan Alasan"),
@@ -120,8 +143,8 @@ class _Attend extends State{
                 pr.show();
                 Future.delayed(Duration(seconds: 1)).then((onValue) async{
                   _verCheckIn();
+                  Navigator.of(context).pop();
                 });
-                Navigator.of(context).pop();
               },
             )
           ],
@@ -135,22 +158,19 @@ class _Attend extends State{
       context: context,
        builder: (context) {
         return AlertDialog(
-          title: Text('Kenapa pulang bro?'),
+          title: Text('Kenapa anda pergi?'),
           content: TextField(
             controller: myController,
             decoration: InputDecoration(hintText: "Masukan Alasan"),
             onChanged: (text){
-              leave_reason = text;
+              leaveReason = text;
             },
           ),
           actions: <Widget>[
             new FlatButton(
               child: new Text('SUBMIT'),
               onPressed: () {
-                pr.show();
-                Future.delayed(Duration(seconds: 1)).then((onValue) async{
-                  _verCheckOut();
-                });
+                _verCheckOut();
                 Navigator.of(context).pop();
               },
             )
@@ -233,11 +253,14 @@ class _Attend extends State{
           msg = 'You have attended at $checkinTime';
         }
       });
+      print(response.body);
+      print(jarakM);
       suksesCheckIn();
     }
     else{
       gagalCheckIn();
     }
+    return Absen.fromJson(json.decode(response.body));
   }
 
   Future<Hasil> _verCheckOut()async{
@@ -246,7 +269,7 @@ class _Attend extends State{
         'authorization':'bearer $token',
       },
       body: {
-        'leave_reason': '$leave_reason',
+        'leave_reason': '$leaveReason',
       }
     );
     if (response.statusCode == 200) {
@@ -256,11 +279,11 @@ class _Attend extends State{
         }
       });
       suksesCheckOut();
-      return Hasil.fromJson(json.decode(response.body));
     }
     else{
       gagalCheckOut();
     }
+    return Hasil.fromJson(json.decode(response.body));
   }
 
   checkTimeOut(){
@@ -303,7 +326,7 @@ class _Attend extends State{
     pr.show();
     getTime();
     Future.delayed(Duration(seconds: 1)).then((onValue) async{
-      checkTimeIn();
+      checkJarak();
     });
   }
 
@@ -314,9 +337,6 @@ class _Attend extends State{
       checkTimeOut();
     });
   }
-
-
-  
 
   @override
   Widget build(BuildContext context) {
@@ -333,6 +353,7 @@ class _Attend extends State{
               size: 40,
             ),
             onPressed:(){
+              checkJarak();
               if (msg.startsWith('P')) {
                 checkIn();
               }

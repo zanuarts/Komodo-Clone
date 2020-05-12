@@ -20,6 +20,7 @@ class _ListAtt extends State{
     setState(() {
       token = pref.getString('token');
     });
+    return String.fromEnvironment(token);
   }
 
   Future<Data> getList() async {

@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:meta/meta.dart';
 import 'package:equatable/equatable.dart';
 import 'package:bloc/bloc.dart';
@@ -33,7 +32,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
           password: event.password,
         );
         if (token == 'failed'){
-          yield LoginFailure(error: 'Username / password salah.');
+          yield LoginFailure(error: 'Username/ Password salah.');
 
         }
         else{

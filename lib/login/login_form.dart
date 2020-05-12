@@ -65,17 +65,15 @@ class _LoginFormState extends State<LoginForm> {
           }
         }
         else if (state is LoginInitial){
-        
           Fluttertoast.showToast(
-                          msg: "Sukses Login",
-                          toastLength: Toast.LENGTH_SHORT,
-                          gravity: ToastGravity.BOTTOM,
-                          timeInSecForIos: 1,
-                          backgroundColor: Colors.green,
-                          textColor: Colors.white,
-                          fontSize: 16.0
-                        );
-        
+            msg: "Sukses Login",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIos: 1,
+            backgroundColor: Colors.green,
+            textColor: Colors.white,
+            fontSize: 16.0
+          );
         }
       },
       child: BlocBuilder<LoginBloc, LoginState>(
@@ -177,7 +175,6 @@ class _LoginFormState extends State<LoginForm> {
                                           padding: EdgeInsets.all(5),
                                           color: Colors.deepOrangeAccent,
                                           textColor: Colors.blue,
-                                          //  shape: new RoundedRectangleBorder(side: BorderSide(color: Colors.blue)),
                                           child: new Text('Login',
                                             style: const TextStyle(
                                               color: Colors.white,
@@ -185,12 +182,7 @@ class _LoginFormState extends State<LoginForm> {
                                               fontWeight: FontWeight.bold,
                                             )
                                           ),
-                                          // onPressed: () async{
-                                          //   _validator();
-                                          // }
                                           onPressed: state is! LoginLoading ? _onLoginButtonPressed : null,
-                                            
-                                          // onPressed: state is! LoginLoading ? _onLoginButtonPressed : null,
                                         )
                                       ),
                                     ),
@@ -201,12 +193,10 @@ class _LoginFormState extends State<LoginForm> {
                           ),
                         ),
                       )
-                      
                     ],
                   )
                 ),
               ),
-            
           ]
           );
         },

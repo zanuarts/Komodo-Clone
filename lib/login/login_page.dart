@@ -7,16 +7,23 @@ import 'package:komodo_ui/repository/repository.dart';
 import 'package:komodo_ui/authentication/authentication.dart';
 import 'package:komodo_ui/login/bloc/login_bloc.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
 
-  bool isLoading = false;
   final UserRepository userRepository;
 
   LoginPage({Key key, @required this.userRepository})
       : assert(userRepository != null),
         super(key: key);
 
+  @override
+  _LoginPageState createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  bool isLoading = false;
+
   DateTime currentBackPressTime = DateTime.now();
+
   Future<bool> onWillPop() {
     DateTime now = DateTime.now();
     if (now.difference(currentBackPressTime) > Duration(seconds: 1)) {
@@ -41,7 +48,7 @@ class LoginPage extends StatelessWidget {
             create: (context) {
             return LoginBloc(
               authenticationBloc: BlocProvider.of<AuthenticationBloc>(context),
-              userRepository: userRepository,
+              userRepository: widget.userRepository,
               );
             },
             child: LoginForm(),

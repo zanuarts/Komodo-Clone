@@ -61,10 +61,6 @@ class _MyappState extends State {
   }
   
   // Time
-  
-
-  Color _iconColor = Colors.white;
-  Color _iconBackgroundColor = Colors.deepOrange;
   bool isLoading = false;
 
   //WIDGET BUILDER
