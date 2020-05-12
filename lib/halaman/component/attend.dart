@@ -142,11 +142,21 @@ class _Attend extends State{
             new FlatButton(
               child: new Text('SUBMIT'),
               onPressed: () {
-                pr.show();
-                Future.delayed(Duration(seconds: 1)).then((onValue) async{
+                if(lateReason == 'Datang tepat waktu'){
+                  Fluttertoast.showToast(
+                    msg: "Tidak boleh kosong",
+                    toastLength: Toast.LENGTH_SHORT,
+                    gravity: ToastGravity.BOTTOM,
+                    timeInSecForIos: 1,
+                    backgroundColor: Colors.red,
+                    textColor: Colors.white,
+                    fontSize: 16.0
+                  );
+                }
+                else{
                   _verCheckIn();
                   Navigator.of(context).pop();
-                });
+                }
               },
             )
           ],
@@ -172,8 +182,21 @@ class _Attend extends State{
             new FlatButton(
               child: new Text('SUBMIT'),
               onPressed: () {
-                _verCheckOut();
-                Navigator.of(context).pop();
+                if(leaveReason == 'Pulang tepat waktu'){
+                  Fluttertoast.showToast(
+                    msg: "Tidak boleh kosong",
+                    toastLength: Toast.LENGTH_SHORT,
+                    gravity: ToastGravity.BOTTOM,
+                    timeInSecForIos: 1,
+                    backgroundColor: Colors.red,
+                    textColor: Colors.white,
+                    fontSize: 16.0
+                  );
+                }
+                else{
+                  _verCheckOut();
+                  Navigator.of(context).pop();
+                }
               },
             )
           ],
@@ -305,7 +328,8 @@ class _Attend extends State{
     if(hourNow < 08.00){
       if(pr.isShowing())
         pr.hide();
-      _verCheckIn();
+      _alasanTelat(context);
+      // _verCheckIn();
       }
       else if (hourNow <= 08.30){
         if(pr.isShowing())
@@ -328,6 +352,7 @@ class _Attend extends State{
     pr.show();
     getTime();
     Future.delayed(Duration(seconds: 1)).then((onValue) async{
+      // checkTimeIn();
       checkJarak();
     });
   }
@@ -343,7 +368,9 @@ class _Attend extends State{
   @override
   Widget build(BuildContext context) {
     pr = new ProgressDialog(context, type: ProgressDialogType.Normal);
+    
     return Row(
+      
       children: <Widget>[
         Padding(
           padding: const EdgeInsets.only(left: 10, top: 25, bottom: 15),
@@ -355,7 +382,6 @@ class _Attend extends State{
               size: 40,
             ),
             onPressed:(){
-              checkJarak();
               if (msg.startsWith('P')) {
                 checkIn();
               }

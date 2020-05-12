@@ -70,6 +70,7 @@ class _MyappState extends State {
     return LayoutBuilder(
       builder: (context, constraints){
         return Scaffold(
+          // resizeToAvoidBottomInset: false,
       drawer: DrawerApp(),
       body: Column(
         children: <Widget>[
