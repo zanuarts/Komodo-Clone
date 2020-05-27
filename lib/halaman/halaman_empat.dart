@@ -108,14 +108,14 @@ class _MyappState extends State {
           ),
           Container(
             
-            child:Center(
-              child: Text(
-                "Coming soon!",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
+            // child:Center(
+            //   child: Text(
+            //     "Coming soon!",
+            //     style: TextStyle(
+            //       fontWeight: FontWeight.bold,
+            //     ),
+            //   ),
+            // ),
           ),
         ],
       ),

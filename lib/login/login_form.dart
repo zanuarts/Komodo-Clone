@@ -32,7 +32,7 @@ class _LoginFormState extends State<LoginForm> {
         if (state is LoginFailure) {
           if (_usernameController.text == '') {
             Fluttertoast.showToast(
-              msg: "Username Tidak Boleh Kosong",
+              msg: "Username Cannot Empty!",
               toastLength: Toast.LENGTH_SHORT,
               gravity: ToastGravity.CENTER,
               timeInSecForIos: 1,
@@ -43,7 +43,7 @@ class _LoginFormState extends State<LoginForm> {
           }
           if (_passwordController.text == '') {
             Fluttertoast.showToast(
-              msg: "Password  Tidak Boleh Kosong",
+              msg: "Password Cannot Empty!",
               toastLength: Toast.LENGTH_SHORT,
               gravity: ToastGravity.CENTER,
               timeInSecForIos: 1,
@@ -54,7 +54,7 @@ class _LoginFormState extends State<LoginForm> {
           }
           if (_usernameController.text != '' && _passwordController != ''){
             Fluttertoast.showToast(
-              msg: "Username / Password Salah!",
+              msg: "Incorrect Username / Password!",
               toastLength: Toast.LENGTH_SHORT,
               gravity: ToastGravity.CENTER,
               timeInSecForIos: 1,
@@ -66,7 +66,7 @@ class _LoginFormState extends State<LoginForm> {
         }
         else if (state is LoginInitial){
           Fluttertoast.showToast(
-            msg: "Sukses Login",
+            msg: "Login Success",
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.BOTTOM,
             timeInSecForIos: 1,

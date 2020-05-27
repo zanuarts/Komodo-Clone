@@ -109,15 +109,15 @@ class _MyappState extends State {
             ),
           ),
           Container(
-            alignment: Alignment.center,
-            child:Center(
-              child: Text(
-                "Coming soon!",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
+            // alignment: Alignment.center,
+            // child:Center(
+            //   child: Text(
+            //     "Coming soon!",
+            //     style: TextStyle(
+            //       fontWeight: FontWeight.bold,
+            //     ),
+            //   ),
+            // ),
           ),
         ],
       ),

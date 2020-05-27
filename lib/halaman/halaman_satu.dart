@@ -113,9 +113,9 @@ class _MyappState extends State {
             ),
           ),
           Container(
-            child: Text(
-              "Coming Soon!"
-            ),
+            // child: Text(
+            //   "Coming Soon!"
+            // ),
           ),
         ],
       ),

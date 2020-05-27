@@ -144,7 +144,7 @@ class _Attend extends State{
               onPressed: () {
                 if(lateReason == 'Datang tepat waktu'){
                   Fluttertoast.showToast(
-                    msg: "Cannot Empty",
+                    msg: "Cannot Empty!",
                     toastLength: Toast.LENGTH_SHORT,
                     gravity: ToastGravity.BOTTOM,
                     timeInSecForIos: 1,
@@ -184,7 +184,7 @@ class _Attend extends State{
               onPressed: () {
                 if(leaveReason == 'Pulang tepat waktu'){
                   Fluttertoast.showToast(
-                    msg: "Cannot Empty",
+                    msg: "Cannot Empty!",
                     toastLength: Toast.LENGTH_SHORT,
                     gravity: ToastGravity.BOTTOM,
                     timeInSecForIos: 1,
@@ -207,7 +207,7 @@ class _Attend extends State{
 
   suksesCheckIn(){
     Fluttertoast.showToast(
-      msg: "Success Check In",
+      msg: "Check in Success",
       toastLength: Toast.LENGTH_SHORT,
       gravity: ToastGravity.BOTTOM,
       timeInSecForIos: 1,
@@ -219,7 +219,7 @@ class _Attend extends State{
 
   gagalCheckIn(){
     Fluttertoast.showToast(
-      msg: "Failed Check In",
+      msg: "Check in Failed",
       toastLength: Toast.LENGTH_SHORT,
       gravity: ToastGravity.BOTTOM,
       timeInSecForIos: 1,
@@ -231,7 +231,7 @@ class _Attend extends State{
 
   suksesCheckOut(){
     Fluttertoast.showToast(
-      msg: "Success CheckOut",
+      msg: "Check out Success",
       toastLength: Toast.LENGTH_SHORT,
       gravity: ToastGravity.BOTTOM,
       timeInSecForIos: 1,
@@ -243,7 +243,7 @@ class _Attend extends State{
 
   gagalCheckOut(){
     Fluttertoast.showToast(
-      msg: "Failed Checkout",
+      msg: "Check out Failed",
       toastLength: Toast.LENGTH_SHORT,
       gravity: ToastGravity.BOTTOM,
       timeInSecForIos: 1,
@@ -300,7 +300,7 @@ class _Attend extends State{
     if (response.statusCode == 200) {
       setState(() {
         if (msg.startsWith('Y')) {
-          msg = 'Checked out success! Thank you!';
+          msg = 'Check out success! Thank you!';
         }
       });
       suksesCheckOut();
