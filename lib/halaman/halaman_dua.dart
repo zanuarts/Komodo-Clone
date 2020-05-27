@@ -72,9 +72,11 @@ class _MyappState extends State<Halamandua>{
     return LayoutBuilder(
       builder: (context, constraints){
         return Scaffold(
-          // resizeToAvoidBottomInset: false,
+          // resizeToAvoidBottomInset: false, 
       drawer: DrawerApp(),
-      body: Column(
+      body: Container(
+        child: SingleChildScrollView(
+          child: Column(
         children: <Widget>[
           Header(),
           Attend(),
@@ -132,7 +134,7 @@ class _MyappState extends State<Halamandua>{
           )
         ]
         )
-        );
+        )));
       },
     );
   }

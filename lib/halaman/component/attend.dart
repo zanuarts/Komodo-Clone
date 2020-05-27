@@ -352,8 +352,8 @@ class _Attend extends State{
     pr.show();
     getTime();
     Future.delayed(Duration(seconds: 1)).then((onValue) async{
-      // checkTimeIn();
-      checkJarak();
+      checkTimeIn();
+      // checkJarak();
     });
   }
 
@@ -368,8 +368,10 @@ class _Attend extends State{
   @override
   Widget build(BuildContext context) {
     pr = new ProgressDialog(context, type: ProgressDialogType.Normal);
-    
+
+    // resizeToAvoidBottomPadding:false,
     return Row(
+      
       children: <Widget>[
         
         Padding(
@@ -407,6 +409,7 @@ class _Attend extends State{
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
+
               Row(
                 children: <Widget>[
                   Icon(

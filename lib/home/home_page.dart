@@ -64,6 +64,7 @@ class _HalamannavState extends State {
       onWillPop: onWillPop,
       child: SafeArea(
         child: Scaffold(
+          // resizeToAvoidBottomPadding:false,
           body: IndexedStack(
             index: _selectedIndex,
             // children: pageList.elementAt(_selectedIndex),

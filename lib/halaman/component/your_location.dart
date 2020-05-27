@@ -9,7 +9,7 @@ class YourLocation extends StatefulWidget {
 }
 
 class _YourLocationState extends State<YourLocation> {
-  double jarakQ;
+  double jarakQ = 0.0;
   
   checkJarak()async{
     jarakQ = await Geolocator().distanceBetween(lat, long, -6.897980, 107.619328);
