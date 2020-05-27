@@ -170,10 +170,10 @@ class _Attend extends State{
       context: context,
        builder: (context) {
         return AlertDialog(
-          title: Text('Why are you go?'),
+          title: Text('Why are you leave?'),
           content: TextField(
             controller: myController,
-            decoration: InputDecoration(hintText: "Enter Reason"),
+            decoration: InputDecoration(hintText: "Enter Leave Reason"),
             onChanged: (text){
               leaveReason = text;
             },
