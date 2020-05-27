@@ -7,12 +7,14 @@ import 'package:location/location.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:komodo_ui/components/attendance.dart';
 
+import 'component/your_location.dart';
+
 class Halamandua extends StatefulWidget {
   @override
   _MyappState createState() => _MyappState();
 }
 
-class _MyappState extends State {
+class _MyappState extends State<Halamandua>{
   ProgressDialog pr;
 
   //get location
@@ -106,7 +108,7 @@ class _MyappState extends State {
             padding: const EdgeInsets.only(left:10),
             alignment: Alignment.centerLeft,
             child: Text(
-              "Check in Activity",
+              "Your Location",
               style: TextStyle(
                 fontWeight: FontWeight.bold,
               ),
@@ -115,17 +117,15 @@ class _MyappState extends State {
           Container(
             height: 140,
             margin: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.all(Radius.circular(10)),
-            ),
-            child: ListView(
+            // decoration: BoxDecoration(
+            //   color: Colors.white,
+            //   borderRadius: BorderRadius.all(Radius.circular(10)),
+            // ),
+            child: Column(
               children: <Widget>[
                 Container(
-                  child: ConstrainedBox(
-                    constraints: new BoxConstraints(minHeight: 0, maxHeight: 1900),
-                    child: Attendance(),
-                  ),
+                  child: YourLocation()
+                  
                 )
               ],
             ),

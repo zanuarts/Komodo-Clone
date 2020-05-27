@@ -38,7 +38,7 @@ class _Attend extends State{
     }
     else{
       Fluttertoast.showToast(
-        msg: "Anda Diluar Jangkauan",
+        msg: "You are out of range!",
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.BOTTOM,
         timeInSecForIos: 1,
@@ -130,10 +130,10 @@ class _Attend extends State{
       context: context,
        builder: (context) {
         return AlertDialog(
-          title: Text('Kenapa anda telat?'),
+          title: Text('Why are you late?'),
           content: TextField(
             controller: myController,
-            decoration: InputDecoration(hintText: "Masukan Alasan"),
+            decoration: InputDecoration(hintText: "Enter Late Reason"),
             onChanged: (text){
               lateReason = text;
             },
@@ -144,7 +144,7 @@ class _Attend extends State{
               onPressed: () {
                 if(lateReason == 'Datang tepat waktu'){
                   Fluttertoast.showToast(
-                    msg: "Tidak boleh kosong",
+                    msg: "Cannot Empty",
                     toastLength: Toast.LENGTH_SHORT,
                     gravity: ToastGravity.BOTTOM,
                     timeInSecForIos: 1,
@@ -170,10 +170,10 @@ class _Attend extends State{
       context: context,
        builder: (context) {
         return AlertDialog(
-          title: Text('Kenapa anda pergi?'),
+          title: Text('Why are you go?'),
           content: TextField(
             controller: myController,
-            decoration: InputDecoration(hintText: "Masukan Alasan"),
+            decoration: InputDecoration(hintText: "Enter Reason"),
             onChanged: (text){
               leaveReason = text;
             },
@@ -184,7 +184,7 @@ class _Attend extends State{
               onPressed: () {
                 if(leaveReason == 'Pulang tepat waktu'){
                   Fluttertoast.showToast(
-                    msg: "Tidak boleh kosong",
+                    msg: "Cannot Empty",
                     toastLength: Toast.LENGTH_SHORT,
                     gravity: ToastGravity.BOTTOM,
                     timeInSecForIos: 1,
@@ -207,7 +207,7 @@ class _Attend extends State{
 
   suksesCheckIn(){
     Fluttertoast.showToast(
-      msg: "Anda Sukses Check In",
+      msg: "Success Check In",
       toastLength: Toast.LENGTH_SHORT,
       gravity: ToastGravity.BOTTOM,
       timeInSecForIos: 1,
@@ -219,7 +219,7 @@ class _Attend extends State{
 
   gagalCheckIn(){
     Fluttertoast.showToast(
-      msg: "Anda Gagal Check In",
+      msg: "Failed Check In",
       toastLength: Toast.LENGTH_SHORT,
       gravity: ToastGravity.BOTTOM,
       timeInSecForIos: 1,
@@ -231,7 +231,7 @@ class _Attend extends State{
 
   suksesCheckOut(){
     Fluttertoast.showToast(
-      msg: "Anda Sukses CheckOut",
+      msg: "Success CheckOut",
       toastLength: Toast.LENGTH_SHORT,
       gravity: ToastGravity.BOTTOM,
       timeInSecForIos: 1,
@@ -243,7 +243,7 @@ class _Attend extends State{
 
   gagalCheckOut(){
     Fluttertoast.showToast(
-      msg: "Gagal Checkout",
+      msg: "Failed Checkout",
       toastLength: Toast.LENGTH_SHORT,
       gravity: ToastGravity.BOTTOM,
       timeInSecForIos: 1,
@@ -370,8 +370,8 @@ class _Attend extends State{
     pr = new ProgressDialog(context, type: ProgressDialogType.Normal);
     
     return Row(
-      
       children: <Widget>[
+        
         Padding(
           padding: const EdgeInsets.only(left: 10, top: 25, bottom: 15),
           child: FloatingActionButton(
@@ -390,7 +390,7 @@ class _Attend extends State{
               }
               else{
                 Fluttertoast.showToast(
-                  msg: "Udah gausah absen lagi",
+                  msg: "You have attended today!",
                   toastLength: Toast.LENGTH_SHORT,
                   gravity: ToastGravity.BOTTOM,
                   timeInSecForIos: 1,
